@@ -51,4 +51,8 @@ export class AppComponent implements OnInit {
         this.tasks = this.tasks.filter(t => t.id !== task.id);
       });
   }
+
+  getTasksByStatus(status: string) {
+    return this.tasks.filter(x => x.status == status);
+  }
 }
