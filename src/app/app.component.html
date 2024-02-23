@@ -1,56 +1,57 @@
-<h2>Add Task</h2>
-<form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
-    <label for="name">Name</label>
-    <input type="text" id="name" formControlName="name">
-    <label for="description"> Description </label>
-    <input type="text" id="description" formControlName="description">
-    <button type="submit">Add Task</button>
-</form>
+<div style="display: none;">
+    <h2>Add Task</h2>
+    <form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name"> <br>
+        <label for="description"> Description </label>
+        <input type="text" id="description" formControlName="description"> <br>
 
+        <button type="submit" class="task-button" role="button">Add Task</button>
+    </form>
+</div>
+<div style="display: flex;justify-content:space-around; margin: 25px 0 30px 0;">
+    <div>
+        <button type="submit" class="task-button" role="button">Add Task</button>
+    </div>
+    <div>search
+        <input type="text" id="search" style="border-radius: 6px;border-width: 1px; border-color: lightgray;">
+    </div>
+</div>
 <div style="display: flex; justify-content:space-evenly; align-content: center; column-gap: 50px;">
 
     <div>
-        <h2>NOT DONE</h2>
-        @for (task of getTasksByStatus('NOT_DONE'); track task.id) {
-        <ul>
-            <li>
-                Name: {{ task.name }} <br>
-                Description : {{ task.description}} <br>
-                Status: {{ task.status }} <br>
-                Creation Date: {{ task.creationDate }} <br>
-                <button (click)="deleteTask(task)">Delete</button>
-            </li>
-        </ul>
+        <div class="status-title">NOT DONE</div>
+        @for (task of getTasksByStatus('NOT_DONE');track task.id) {
+        <div class="task-card">
+            <div class="task-card-title"> {{ task.name }} </div>
+            <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+            <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+            <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+        </div>
         }
     </div>
 
 
     <div>
-        <h2>IN PROGRESS</h2>
-        @for (task of getTasksByStatus('IN_PROGRESS'); track task.id) {
-        <ul>
-            <li>
-                Name: {{ task.name }} <br>
-                Description : {{ task.description}} <br>
-                Status: {{ task.status }} <br>
-                Creation Date: {{ task.creationDate }} <br>
-                <button (click)="deleteTask(task)">Delete</button>
-            </li>
-        </ul>
+        <div class="status-title">IN PROGRESS</div>
+        @for (task of getTasksByStatus('IN_PROGRESS');track task.id) {
+        <div class="task-card">
+            <div class="task-card-title"> {{ task.name }} </div>
+            <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+            <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+            <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+        </div>
         }
     </div>
     <div>
-        <h2>DONE</h2>
+        <div class="status-title">DONE </div>
         @for (task of getTasksByStatus('DONE');track task.id) {
-        <ul>
-            <li>
-                Name: {{ task.name }} <br>
-                Description : {{ task.description}} <br>
-                Status: {{ task.status }} <br>
-                Creation Date: {{ task.creationDate }} <br>
-                <button (click)="deleteTask(task)">Delete</button>
-            </li>
-        </ul>
+        <div class="task-card">
+            <div class="task-card-title"> {{ task.name }} </div>
+            <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+            <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+            <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+        </div>
         }
     </div>
 </div>
