@@ -7,40 +7,50 @@
     <button type="submit">Add Task</button>
 </form>
 
+<div style="display: flex; justify-content:space-evenly; align-content: center; column-gap: 50px;">
 
-<div>
-    <h2>NOT DONE</h2>
-    <ul>
-        <li *ngFor="let task of getTasksByStatus('NOT_DONE')" style="margin-bottom: 15px;">
-            Name: {{ task.name }} <br>
-            Description : {{ task.description}} <br>
-            Status: {{ task.status }} <br>
-            Creation Date: {{ task.creationDate }} <br>
-            <button (click)="deleteTask(task)">Delete</button>
-        </li>
-    </ul>
-</div>
-<div>
-    <h2>IN PROGRESS</h2>
-    <ul>
-        <li *ngFor="let task of getTasksByStatus('IN_PROGRESS')" style="margin-bottom: 15px;">
-            Name: {{ task.name }} <br>
-            Description : {{ task.description}} <br>
-            Status: {{ task.status }} <br>
-            Creation Date: {{ task.creationDate }} <br>
-            <button (click)="deleteTask(task)">Delete</button>
-        </li>
-    </ul>
-</div>
-<div>
-    <h2>DONE</h2>
-    <ul>
-        <li *ngFor="let task of getTasksByStatus('DONE')" style="margin-bottom: 15px;">
-            Name: {{ task.name }} <br>
-            Description : {{ task.description}} <br>
-            Status: {{ task.status }} <br>
-            Creation Date: {{ task.creationDate }} <br>
-            <button (click)="deleteTask(task)">Delete</button>
-        </li>
-    </ul>
+    <div>
+        <h2>NOT DONE</h2>
+        @for (task of getTasksByStatus('NOT_DONE'); track task.id) {
+        <ul>
+            <li>
+                Name: {{ task.name }} <br>
+                Description : {{ task.description}} <br>
+                Status: {{ task.status }} <br>
+                Creation Date: {{ task.creationDate }} <br>
+                <button (click)="deleteTask(task)">Delete</button>
+            </li>
+        </ul>
+        }
+    </div>
+
+
+    <div>
+        <h2>IN PROGRESS</h2>
+        @for (task of getTasksByStatus('IN_PROGRESS'); track task.id) {
+        <ul>
+            <li>
+                Name: {{ task.name }} <br>
+                Description : {{ task.description}} <br>
+                Status: {{ task.status }} <br>
+                Creation Date: {{ task.creationDate }} <br>
+                <button (click)="deleteTask(task)">Delete</button>
+            </li>
+        </ul>
+        }
+    </div>
+    <div>
+        <h2>DONE</h2>
+        @for (task of getTasksByStatus('DONE');track task.id) {
+        <ul>
+            <li>
+                Name: {{ task.name }} <br>
+                Description : {{ task.description}} <br>
+                Status: {{ task.status }} <br>
+                Creation Date: {{ task.creationDate }} <br>
+                <button (click)="deleteTask(task)">Delete</button>
+            </li>
+        </ul>
+        }
+    </div>
 </div>
