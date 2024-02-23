@@ -7,43 +7,40 @@
     <button type="submit">Add Task</button>
 </form>
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm">
-            <h2>NOT DONE</h2>
-            <ul>
-                <li *ngFor="let task of getTasksByStatus('NOT_DONE')" style="margin-bottom: 15px;">
-                    Name: {{ task.name }} <br>
-                    Description : {{ task.description}} <br>
-                    Status: {{ task.status }} <br>
-                    Creation Date: {{ task.creationDate }} <br>
-                    <button (click)="deleteTask(task)">Delete</button>
-                </li>
-            </ul>
-        </div>
-        <div class="col-sm">
-            <h2>IN PROGRESS</h2>
-            <ul>
-                <li *ngFor="let task of getTasksByStatus('IN_PROGRESS')" style="margin-bottom: 15px;">
-                    Name: {{ task.name }} <br>
-                    Description : {{ task.description}} <br>
-                    Status: {{ task.status }} <br>
-                    Creation Date: {{ task.creationDate }} <br>
-                    <button (click)="deleteTask(task)">Delete</button>
-                </li>
-            </ul>
-        </div>
-        <div class="col-sm">
-            <h2>DONE</h2>
-            <ul>
-                <li *ngFor="let task of getTasksByStatus('DONE')" style="margin-bottom: 15px;">
-                    Name: {{ task.name }} <br>
-                    Description : {{ task.description}} <br>
-                    Status: {{ task.status }} <br>
-                    Creation Date: {{ task.creationDate }} <br>
-                    <button (click)="deleteTask(task)">Delete</button>
-                </li>
-            </ul>
-        </div>
-    </div>
+
+<div>
+    <h2>NOT DONE</h2>
+    <ul>
+        <li *ngFor="let task of getTasksByStatus('NOT_DONE')" style="margin-bottom: 15px;">
+            Name: {{ task.name }} <br>
+            Description : {{ task.description}} <br>
+            Status: {{ task.status }} <br>
+            Creation Date: {{ task.creationDate }} <br>
+            <button (click)="deleteTask(task)">Delete</button>
+        </li>
+    </ul>
+</div>
+<div>
+    <h2>IN PROGRESS</h2>
+    <ul>
+        <li *ngFor="let task of getTasksByStatus('IN_PROGRESS')" style="margin-bottom: 15px;">
+            Name: {{ task.name }} <br>
+            Description : {{ task.description}} <br>
+            Status: {{ task.status }} <br>
+            Creation Date: {{ task.creationDate }} <br>
+            <button (click)="deleteTask(task)">Delete</button>
+        </li>
+    </ul>
+</div>
+<div>
+    <h2>DONE</h2>
+    <ul>
+        <li *ngFor="let task of getTasksByStatus('DONE')" style="margin-bottom: 15px;">
+            Name: {{ task.name }} <br>
+            Description : {{ task.description}} <br>
+            Status: {{ task.status }} <br>
+            Creation Date: {{ task.creationDate }} <br>
+            <button (click)="deleteTask(task)">Delete</button>
+        </li>
+    </ul>
 </div>
