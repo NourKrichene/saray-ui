@@ -4,17 +4,29 @@ import { RouterOutlet } from '@angular/router';
 import { Task } from './Task';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDrag,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HttpClientModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterOutlet, HttpClientModule, ReactiveFormsModule, DragDropModule, CdkDropList, CdkDrag, CdkDropListGroup],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 
 export class AppComponent implements OnInit {
   tasks: Task[] = [];
+  tasksToDo: Task[] = [];
+  tasksInProgress: Task[] = [];
+  tasksDone: Task[] = [];
   addTaskForm!: FormGroup;
 
   constructor(private http: HttpClient) {
@@ -31,13 +43,22 @@ export class AppComponent implements OnInit {
 
   getTasks(): void {
     this.http.get<Task[]>('http://localhost:8081/tasks')
-      .subscribe(tasks => this.tasks = tasks);
+      .subscribe(tasks => {
+        this.tasks = tasks;
+        this.divideTasksByStatus();
+      }
+      );
+  }
+
+  private divideTasksByStatus() {
+    this.tasksToDo = this.getTasksByStatus('NOT_DONE');
+    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS');
+    this.tasksDone = this.getTasksByStatus('DONE');
   }
 
   addTask(): void {
     const task: Task = this.addTaskForm.value;
     task.creationDate = new Date();
-    console.log(task);
     this.http.post<Task>('http://localhost:8081/task', task)
       .subscribe(task => {
         this.tasks.push(task);
@@ -54,5 +75,18 @@ export class AppComponent implements OnInit {
 
   getTasksByStatus(status: string) {
     return this.tasks.filter(x => x.status == status);
+  }
+
+  drop(event: CdkDragDrop<Task[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
 }

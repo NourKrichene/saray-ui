@@ -19,41 +19,47 @@
             background-color: #ebebeb; margin-top: 2%;">
     </div>
 </div>
-<div style="display: flex; justify-content:space-evenly; align-content: center; column-gap: 50px;">
+<div style="display: flex; justify-content:space-evenly; align-content: center; column-gap: 50px;" cdkDropListGroup>
 
     <div>
-        <div class="status-title">NOT DONE</div>
-        @for (task of getTasksByStatus('NOT_DONE');track task.id) {
-        <div class="task-card">
-            <div class="task-card-title"> {{ task.name }} </div>
-            <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-            <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-            <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+        <div class="status-title" cdkDropList>NOT DONE</div>
+        <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event)">
+            @for (task of tasksToDo ;track task.id) {
+            <div class="task-card" cdkDrag>
+                <div class="task-card-title"> {{ task.name }} </div>
+                <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+                <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+                <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+            </div>
+            }
         </div>
-        }
+
     </div>
-
-
     <div>
-        <div class="status-title">IN PROGRESS</div>
-        @for (task of getTasksByStatus('IN_PROGRESS');track task.id) {
-        <div class="task-card">
-            <div class="task-card-title"> {{ task.name }} </div>
-            <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-            <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-            <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+        <div class="status-title" cdkDropList>IN PROGRESS</div>
+        <div cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="tasksInProgress">
+            @for (task of tasksInProgress;track task.id) {
+            <div class="task-card" cdkDrag>
+                <div class="task-card-title"> {{ task.name }} </div>
+                <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+                <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+                <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+            </div>
+            }
         </div>
-        }
     </div>
     <div>
         <div class="status-title">DONE </div>
-        @for (task of getTasksByStatus('DONE');track task.id) {
-        <div class="task-card">
-            <div class="task-card-title"> {{ task.name }} </div>
-            <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-            <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-            <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+        <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event)">
+            @for (task of tasksDone ;track task.id) {
+            <div class="task-card" cdkDrag>
+                <div class="task-card-title"> {{ task.name }} </div>
+                <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+                <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+                <button class="task-button" role="button" (click)="deleteTask(task)">Delete</button>
+            </div>
+            }
         </div>
-        }
     </div>
+
 </div>
