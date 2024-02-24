@@ -10,7 +10,9 @@
   padding: 20px;
   border-radius: 6px;
   margin-block: 20px;
-  width: 320px;
+  max-width: 320px;
+  color: #1a1313;
+  background-color: #fbfbfb;
 }
 
 .task-button {
@@ -36,6 +38,7 @@
   touch-action: manipulation;
   vertical-align: top;
   white-space: nowrap;
+  margin-top: 3%;
 }
 
 .task-button:active {
@@ -60,6 +63,7 @@
   font-size: 1.1em;
   font-weight: 500;
   margin-bottom: 0.8em;
+  color: #1a1313;
 }
 
 .task-card-body {
