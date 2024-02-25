@@ -69,9 +69,24 @@ export class AppComponent implements OnInit {
       });
   }
 
-  deleteTask(task: Task): void {
+  deleteTask(task: Task, status: string): void {
     this.http.delete<Task>('http://localhost:8081/task/' + task.id)
       .subscribe(() => {
+
+        switch (status) {
+          case 'NOT_DONE':
+            this.tasksToDo = this.tasksToDo.filter(t => t.id !== task.id);
+            break;
+          case 'IN_PROGRESS':
+            this.tasksInProgress = this.tasksInProgress.filter(t => t.id !== task.id);
+            break;
+          case 'DONE':
+            this.tasksDone = this.tasksDone.filter(t => t.id !== task.id);
+            break;
+          default:
+            console.log(`Sorry, we are out of ${status}.`);
+        }
+
         this.tasks = this.tasks.filter(t => t.id !== task.id);
       });
   }
