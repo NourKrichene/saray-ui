@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Task } from './Task';
+import { TaskService } from './task.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -14,12 +15,14 @@ import {
   transferArrayItem
 } from '@angular/cdk/drag-drop';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, HttpClientModule, ReactiveFormsModule, DragDropModule, CdkDropList, CdkDrag, CdkDropListGroup],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [TaskService]
 })
 
 export class AppComponent implements OnInit {
@@ -29,7 +32,7 @@ export class AppComponent implements OnInit {
   tasksDone: Task[] = [];
   addTaskForm!: FormGroup;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, protected taskService: TaskService) {
   }
 
   ngOnInit() {
@@ -42,7 +45,7 @@ export class AppComponent implements OnInit {
   }
 
   getTasks(): void {
-    this.http.get<Task[]>('http://localhost:8081/tasks')
+    this.taskService.getTasks()
       .subscribe(tasks => {
         this.tasks = tasks;
         this.divideTasksByStatus();
