@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Task } from './Task';
 import { TaskService } from './task.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import {
+  DragDropModule,
   CdkDragDrop,
   CdkDrag,
   CdkDropList,
@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   tasksInProgress: Task[] = [];
   tasksDone: Task[] = [];
   addTaskForm!: FormGroup;
+  loading = signal(true);
 
   constructor(private http: HttpClient, protected taskService: TaskService) {
   }
@@ -44,9 +45,14 @@ export class AppComponent implements OnInit {
     });
   }
 
+  isLoading() {
+    return this.loading();
+  }
+
   getTasks(): void {
     this.taskService.getTasks()
       .subscribe(tasks => {
+        this.loading.set(false);
         this.tasks = tasks;
         this.divideTasksByStatus();
       }
@@ -67,6 +73,12 @@ export class AppComponent implements OnInit {
         this.tasks.push(task);
         this.addTaskForm.reset();
       });
+  }
+
+  editTask(task: Task): void {
+
+    this.http.patch<Task>('http://localhost:8081/task', task)
+      .subscribe();
   }
 
   deleteTask(task: Task, status: string): void {
@@ -95,7 +107,7 @@ export class AppComponent implements OnInit {
     return this.tasks.filter(x => x.status == status);
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
+  drop(event: CdkDragDrop<Task[]>, status: string) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -105,6 +117,8 @@ export class AppComponent implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
+      event.container.data[event.currentIndex].status = status;
+      this.editTask(event.container.data[event.currentIndex]);
     }
   }
 }

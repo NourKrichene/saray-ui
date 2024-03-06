@@ -15,7 +15,7 @@ export class TaskService {
     public getTasks(): Observable<Task[]> {
         return this.http.get<Task[]>(`${this.apiUrl}tasks`).pipe(
             catchError((error: HttpErrorResponse) => {
-                let errorMessage = 'Something went wrong.';
+                let errorMessage;
                 if (error.error instanceof ErrorEvent) {
                     // Client-side error
                     errorMessage = `Error: ${error.error.message}`;

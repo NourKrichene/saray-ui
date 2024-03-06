@@ -19,11 +19,16 @@
             background-color: #ebebeb; margin-top: 2%;">
     </div>
 </div>
+@if (isLoading()) {
+<div class="loader"></div>
+}
+@if (!isLoading()) {
 <div style="display: flex; justify-content:space-evenly; align-content: center; column-gap: 50px;" cdkDropListGroup>
 
     <div>
         <div class="status-title" cdkDropList>NOT DONE</div>
-        <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event)">
+        <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event,'NOT_DONE')"
+            style="min-height: 40%; min-width: 22.5em;">
             @for (task of tasksToDo ;track task.id) {
             <div class="task-card" cdkDrag>
                 <div class="task-card-title"> {{ task.name }} </div>
@@ -37,7 +42,8 @@
     </div>
     <div>
         <div class="status-title" cdkDropList>IN PROGRESS</div>
-        <div cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="tasksInProgress">
+        <div cdkDropList (cdkDropListDropped)="drop($event,'IN_PROGRESS')" [cdkDropListData]="tasksInProgress"
+            style="min-height: 40%; min-width: 22.5em;">
             @for (task of tasksInProgress;track task.id) {
             <div class="task-card" cdkDrag>
                 <div class="task-card-title"> {{ task.name }} </div>
@@ -50,7 +56,8 @@
     </div>
     <div>
         <div class="status-title">DONE </div>
-        <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event)">
+        <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event,'DONE')"
+            style="min-height: 40%; min-width: 22.5em;">
             @for (task of tasksDone ;track task.id) {
             <div class="task-card" cdkDrag>
                 <div class="task-card-title"> {{ task.name }} </div>
@@ -62,4 +69,4 @@
         </div>
     </div>
 
-</div>
+</div>}
