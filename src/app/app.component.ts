@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
 
   editTask(task: Task): void {
 
-    this.http.patch<Task>('http://localhost:8081/task', task)
+    this.http.put<Task>('http://localhost:8081/task', task)
       .subscribe();
   }
 
