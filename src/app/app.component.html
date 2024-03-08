@@ -1,64 +1,74 @@
-<div style="display: flex;justify-content:space-between; margin-bottom: 30px;">
-    <div style="font-weight: bold; font-size: large; margin-left: 1%;  color: #1a1313;">SARAY</div>
-    <div>
-        <button type="submit" class="task-button" role="button" (click)="openAddTaskModal()">Add Task</button>
+<div style=" display: grid;
+grid-template-rows: auto auto;
+grid-gap: 20px;">
+
+    <div style=" display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+   grid-gap: 20px;">
+        <div style="font-weight: bold; font-size: large; margin-left: 1%;  color: #1a1313;">SARAY</div>
+        <div style=" justify-self: center;  margin-top: 2%;">
+            <button type="submit" class="task-button" role="button" (click)="openAddTaskModal()">Add Task</button>
+        </div>
+        <div style=" justify-self: end;  margin-top: 2%; margin-right: 2%;">
+            <input type="text" id="search" placeholder=" search" style="border-radius: 6px;border-width: 1px;
+            background-color: #ebebeb;">
+        </div>
     </div>
-    <div>
-        <input type="text" id="search" placeholder=" search" style="border-radius: 6px;border-width: 1px; margin-right: 5%;
-            background-color: #ebebeb; margin-top: 2%;">
-    </div>
+
+    @if (isLoading()) {
+    <div class="loader"></div>
+    }
+    @if (!isLoading()) {
+    <div style=" display: grid;
+    grid-template-columns: repeat(8,1fr);
+   grid-gap: 20px;" cdkDropListGroup>
+
+        <div style="grid-column-start: 2;   grid-column-end: 4;">
+            <div class="status-title" cdkDropList>NOT DONE</div>
+            <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event,'NOT_DONE')"
+                style="min-height: 60%;">
+                @for (task of tasksToDo ;track task.id) {
+                <div class="task-card" cdkDrag>
+                    <div class="task-card-title"> {{ task.name }} </div>
+                    <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+                    <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+                    <button class="task-button" role="button" (click)="deleteTask(task,'NOT_DONE')">Delete</button>
+                    <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                </div>
+                }
+            </div>
+
+        </div>
+        <div style="grid-column-start: 4;   grid-column-end: 6;">
+            <div class="status-title" cdkDropList>IN PROGRESS</div>
+            <div cdkDropList (cdkDropListDropped)="drop($event,'IN_PROGRESS')" [cdkDropListData]="tasksInProgress"
+                style="min-height: 60%;">
+                @for (task of tasksInProgress;track task.id) {
+                <div class="task-card" cdkDrag>
+                    <div class="task-card-title"> {{ task.name }} </div>
+                    <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+                    <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+                    <button class="task-button" role="button" (click)="deleteTask(task,'IN_PROGRESS')">Delete</button>
+                    <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                </div>
+                }
+            </div>
+        </div>
+        <div style="grid-column-start: 6; grid-column-end: 8;">
+            <div class="status-title">DONE </div>
+            <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event,'DONE')"
+                style="min-height: 60%;">
+                @for (task of tasksDone ;track task.id) {
+                <div class="task-card" cdkDrag>
+                    <div class="task-card-title"> {{ task.name }} </div>
+                    <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
+                    <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
+                    <button class="task-button" role="button" (click)="deleteTask(task,'DONE')">Delete</button>
+                    <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                </div>
+                }
+            </div>
+        </div>
+
+    </div>}
 </div>
-@if (isLoading()) {
-<div class="loader"></div>
-}
-@if (!isLoading()) {
-<div style="display: flex; justify-content:space-evenly; align-content: center; column-gap: 50px;" cdkDropListGroup>
-
-    <div>
-        <div class="status-title" cdkDropList>NOT DONE</div>
-        <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event,'NOT_DONE')"
-            style="min-height: 40%; min-width: 22.5em;">
-            @for (task of tasksToDo ;track task.id) {
-            <div class="task-card" cdkDrag>
-                <div class="task-card-title"> {{ task.name }} </div>
-                <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-                <button class="task-button" role="button" (click)="deleteTask(task,'NOT_DONE')">Delete</button>
-                <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
-            </div>
-            }
-        </div>
-
-    </div>
-    <div>
-        <div class="status-title" cdkDropList>IN PROGRESS</div>
-        <div cdkDropList (cdkDropListDropped)="drop($event,'IN_PROGRESS')" [cdkDropListData]="tasksInProgress"
-            style="min-height: 40%; min-width: 22.5em;">
-            @for (task of tasksInProgress;track task.id) {
-            <div class="task-card" cdkDrag>
-                <div class="task-card-title"> {{ task.name }} </div>
-                <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-                <button class="task-button" role="button" (click)="deleteTask(task,'IN_PROGRESS')">Delete</button>
-                <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
-            </div>
-            }
-        </div>
-    </div>
-    <div>
-        <div class="status-title">DONE </div>
-        <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event,'DONE')"
-            style="min-height: 40%; min-width: 22.5em;">
-            @for (task of tasksDone ;track task.id) {
-            <div class="task-card" cdkDrag>
-                <div class="task-card-title"> {{ task.name }} </div>
-                <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-                <button class="task-button" role="button" (click)="deleteTask(task,'DONE')">Delete</button>
-                <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
-            </div>
-            }
-        </div>
-    </div>
-
-</div>}
