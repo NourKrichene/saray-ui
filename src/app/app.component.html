@@ -35,6 +35,7 @@
                 <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                 <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
                 <button class="task-button" role="button" (click)="deleteTask(task,'NOT_DONE')">Delete</button>
+                <button class="task-button" role="button" (click)="openModal(task)">Edit</button>
             </div>
             }
         </div>
@@ -50,6 +51,7 @@
                 <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                 <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
                 <button class="task-button" role="button" (click)="deleteTask(task,'IN_PROGRESS')">Delete</button>
+                <button class="task-button" role="button" (click)="openModal(task)">Edit</button>
             </div>
             }
         </div>
@@ -64,6 +66,7 @@
                 <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                 <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
                 <button class="task-button" role="button" (click)="deleteTask(task,'DONE')">Delete</button>
+                <button class="task-button" role="button" (click)="openModal(task)">Edit</button>
             </div>
             }
         </div>

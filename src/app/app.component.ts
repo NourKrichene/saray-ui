@@ -4,6 +4,8 @@ import { RouterOutlet } from '@angular/router';
 import { Task } from './Task';
 import { TaskService } from './task.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { EditTaskModalComponent } from './edit-task-modal/edit-task-modal.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   DragDropModule,
@@ -33,7 +35,7 @@ export class AppComponent implements OnInit {
   addTaskForm!: FormGroup;
   loading = signal(true);
 
-  constructor(private http: HttpClient, protected taskService: TaskService) {
+  constructor(private http: HttpClient, protected taskService: TaskService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -78,7 +80,26 @@ export class AppComponent implements OnInit {
   editTask(task: Task): void {
 
     this.http.put<Task>('http://localhost:8081/task', task)
-      .subscribe();
+      .subscribe((task) => {
+
+        switch (task.status) {
+          case 'NOT_DONE':
+            this.tasksToDo[this.tasksToDo.findIndex(t => t.id === task.id)] = task;
+            break;
+          case 'IN_PROGRESS':
+            this.tasksInProgress[this.tasksInProgress.findIndex(t => t.id === task.id)] = task;
+            break;
+          case 'DONE':
+            this.tasksDone[this.tasksDone.findIndex(t => t.id === task.id)] = task;
+            break;
+          default:
+            console.log(`Sorry, we are out of ${task.status}.`);
+        }
+
+      }
+
+      );
+
   }
 
   deleteTask(task: Task, status: string): void {
@@ -105,6 +126,19 @@ export class AppComponent implements OnInit {
 
   getTasksByStatus(status: string) {
     return this.tasks.filter(x => x.status == status);
+  }
+
+  openModal(task: Task): void {
+    const dialogRef = this.dialog.open(EditTaskModalComponent, {
+      height: '500px',
+      width: '600px',
+      data: task
+    });
+
+    dialogRef.componentInstance.taskEdited.subscribe((editedTask: Task) => {
+      this.editTask(editedTask);
+      dialogRef.close();
+    });
   }
 
   drop(event: CdkDragDrop<Task[]>, status: string) {

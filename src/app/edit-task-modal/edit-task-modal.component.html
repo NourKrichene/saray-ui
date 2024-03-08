@@ -1,0 +1,8 @@
+<h2>Edit Task</h2>
+<form (ngSubmit)="submit()">
+    <label>Title:</label>
+    <input type="text" [(ngModel)]="editedTask.name" name="name"><br>
+    <label>Description:</label>
+    <textarea [(ngModel)]="editedTask.description" name="description"></textarea><br>
+    <button type="submit">Submit</button>
+</form>
