@@ -5,7 +5,8 @@ import { Task } from './Task';
 import { TaskService } from './task.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { EditTaskModalComponent } from './edit-task-modal/edit-task-modal.component';
+import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
+import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   DragDropModule,
@@ -128,7 +129,7 @@ export class AppComponent implements OnInit {
     return this.tasks.filter(x => x.status == status);
   }
 
-  openModal(task: Task): void {
+  openEditTaskModal(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskModalComponent, {
       height: '500px',
       width: '600px',
@@ -137,6 +138,22 @@ export class AppComponent implements OnInit {
 
     dialogRef.componentInstance.taskEdited.subscribe((editedTask: Task) => {
       this.editTask(editedTask);
+      dialogRef.close();
+    });
+  }
+
+
+  openAddTaskModal(): void {
+    const dialogRef = this.dialog.open(AddTaskModalComponent, {
+      height: '500px',
+      width: '600px'
+    });
+
+    dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {
+      this.http.post<Task>('http://localhost:8081/task', task)
+        .subscribe(task => {
+          this.tasksToDo.unshift(task);
+        });
       dialogRef.close();
     });
   }

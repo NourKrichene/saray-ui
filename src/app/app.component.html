@@ -1,18 +1,7 @@
-<div style="display: none;">
-    <h2>Add Task</h2>
-    <form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
-        <label for="name">Name</label>
-        <input type="text" id="name" formControlName="name"> <br>
-        <label for="description"> Description </label>
-        <input type="text" id="description" formControlName="description"> <br>
-
-        <button type="submit" class="task-button" role="button">Add Task</button>
-    </form>
-</div>
 <div style="display: flex;justify-content:space-between; margin-bottom: 30px;">
     <div style="font-weight: bold; font-size: large; margin-left: 1%;  color: #1a1313;">SARAY</div>
     <div>
-        <button type="submit" class="task-button" role="button">Add Task</button>
+        <button type="submit" class="task-button" role="button" (click)="openAddTaskModal()">Add Task</button>
     </div>
     <div>
         <input type="text" id="search" placeholder=" search" style="border-radius: 6px;border-width: 1px; margin-right: 5%;
@@ -35,7 +24,7 @@
                 <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                 <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
                 <button class="task-button" role="button" (click)="deleteTask(task,'NOT_DONE')">Delete</button>
-                <button class="task-button" role="button" (click)="openModal(task)">Edit</button>
+                <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
             </div>
             }
         </div>
@@ -51,7 +40,7 @@
                 <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                 <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
                 <button class="task-button" role="button" (click)="deleteTask(task,'IN_PROGRESS')">Delete</button>
-                <button class="task-button" role="button" (click)="openModal(task)">Edit</button>
+                <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
             </div>
             }
         </div>
@@ -66,7 +55,7 @@
                 <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                 <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
                 <button class="task-button" role="button" (click)="deleteTask(task,'DONE')">Delete</button>
-                <button class="task-button" role="button" (click)="openModal(task)">Edit</button>
+                <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
             </div>
             }
         </div>
