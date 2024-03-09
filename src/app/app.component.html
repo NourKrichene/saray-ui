@@ -1,10 +1,10 @@
 <div style=" display: grid;
-grid-template-rows: auto auto;
-grid-gap: 20px;">
+grid-template-rows: 4% auto;
+grid-gap: 10px;">
 
     <div style=" display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-   grid-gap: 20px;">
+   grid-gap: 10px;">
         <div style="font-weight: bold; font-size: large; margin-left: 1%;  color: #1a1313;">SARAY</div>
         <div style=" justify-self: center;  margin-top: 2%;">
             <button type="submit" class="task-button" role="button" (click)="openAddTaskModal()">Add Task</button>
@@ -20,10 +20,9 @@ grid-gap: 20px;">
     }
     @if (!isLoading()) {
     <div style=" display: grid;
-    grid-template-columns: repeat(8,1fr);
-   grid-gap: 20px;" cdkDropListGroup>
+    grid-template-columns: 5% 30% 30% 30% 5%; justify-items: center;" cdkDropListGroup>
 
-        <div style="grid-column-start: 2;   grid-column-end: 4;">
+        <div style="grid-column-start: 2;">
             <div class="status-title" cdkDropList>NOT DONE</div>
             <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event,'NOT_DONE')"
                 style="min-height: 60%;">
@@ -39,7 +38,7 @@ grid-gap: 20px;">
             </div>
 
         </div>
-        <div style="grid-column-start: 4;   grid-column-end: 6;">
+        <div style="grid-column-start: 3;">
             <div class="status-title" cdkDropList>IN PROGRESS</div>
             <div cdkDropList (cdkDropListDropped)="drop($event,'IN_PROGRESS')" [cdkDropListData]="tasksInProgress"
                 style="min-height: 60%;">
@@ -54,7 +53,7 @@ grid-gap: 20px;">
                 }
             </div>
         </div>
-        <div style="grid-column-start: 6; grid-column-end: 8;">
+        <div style="grid-column-start: 4;">
             <div class="status-title">DONE </div>
             <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event,'DONE')"
                 style="min-height: 60%;">
