@@ -1,19 +1,15 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core'; import { CommonModule } from '@angular/common';
 import { Task } from './Task';
 import { TaskService } from './task.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   DragDropModule,
   CdkDragDrop,
-  CdkDrag,
   CdkDropList,
-  CdkDropListGroup,
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
@@ -22,7 +18,7 @@ import {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HttpClientModule, ReactiveFormsModule, DragDropModule, CdkDropList, CdkDrag, CdkDropListGroup],
+  imports: [DragDropModule, CdkDropList, CommonModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: [TaskService]
