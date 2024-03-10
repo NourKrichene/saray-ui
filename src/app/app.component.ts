@@ -126,8 +126,8 @@ export class AppComponent implements OnInit {
 
   openEditTaskModal(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskModalComponent, {
-      height: '500px',
-      width: '600px',
+      height: '400px',
+      width: '500px',
       data: task
     });
 
@@ -140,8 +140,8 @@ export class AppComponent implements OnInit {
 
   openAddTaskModal(): void {
     const dialogRef = this.dialog.open(AddTaskModalComponent, {
-      height: '500px',
-      width: '600px'
+      height: '400px',
+      width: '500px'
     });
 
     dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {

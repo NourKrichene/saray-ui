@@ -1,8 +1,19 @@
-<h2>Edit Task</h2>
-<form (ngSubmit)="submit()">
-    <label>Title:</label>
-    <input type="text" [(ngModel)]="editedTask.name" name="name"><br>
-    <label>Description:</label>
-    <textarea [(ngModel)]="editedTask.description" name="description"></textarea><br>
-    <button type="submit">Submit</button>
-</form>
+<div style="  color: #1a1313;
+background-color: #fbfbfb;">
+    <h2>Edit Task</h2>
+    <form (ngSubmit)="submit()" style=" display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;">
+
+        <div style="grid-column: 1/2;"> <label>Title</label></div>
+        <div style="grid-column: 1/3;"> <input style="width:70%" type="text" [(ngModel)]="editedTask.name" name="name">
+        </div>
+
+        <div style="grid-column: 1/2;"> <label>Description</label></div>
+        <div style="grid-column: 1/3;"> <textarea style="width:70%" [(ngModel)]="editedTask.description"
+                name="description"></textarea></div>
+
+        <button style="grid-column: 2/3;" type="submit">Submit</button>
+    </form>
+</div>
