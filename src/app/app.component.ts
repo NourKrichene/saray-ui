@@ -4,8 +4,9 @@ import { Task } from './Task';
 import { TaskService } from './task.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
+import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
+import { DeleteTaskModalComponent } from './delete-task-modal/delete-task-modal.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   DragDropModule,
@@ -109,25 +110,37 @@ export class AppComponent implements OnInit {
   }
 
   deleteTask(task: Task, status: string): void {
-    this.http.delete<Task>('http://localhost:8081/tasks/' + task.id)
-      .subscribe(() => {
+    const dialogRef = this.dialog.open(DeleteTaskModalComponent, {
+      height: '200px',
+      width: '300px'
+    });
 
-        switch (status) {
-          case 'NOT_DONE':
-            this.tasksToDo = this.tasksToDo.filter(t => t.id !== task.id);
-            break;
-          case 'IN_PROGRESS':
-            this.tasksInProgress = this.tasksInProgress.filter(t => t.id !== task.id);
-            break;
-          case 'DONE':
-            this.tasksDone = this.tasksDone.filter(t => t.id !== task.id);
-            break;
-          default:
-            console.log(`Sorry, we are out of ${status}.`);
-        }
+    dialogRef.componentInstance.confirmDelete.subscribe((confirmDelete: boolean) => {
+      if (confirmDelete) {
+        this.http.delete<Task>('http://localhost:8081/tasks/' + task.id)
+          .subscribe(() => {
 
-        this.tasks = this.tasks.filter(t => t.id !== task.id);
-      });
+            switch (status) {
+              case 'NOT_DONE':
+                this.tasksToDo = this.tasksToDo.filter(t => t.id !== task.id);
+                break;
+              case 'IN_PROGRESS':
+                this.tasksInProgress = this.tasksInProgress.filter(t => t.id !== task.id);
+                break;
+              case 'DONE':
+                this.tasksDone = this.tasksDone.filter(t => t.id !== task.id);
+                break;
+              default:
+                console.log(`Sorry, we are out of ${status}.`);
+            }
+
+            this.tasks = this.tasks.filter(t => t.id !== task.id);
+          });
+      }
+      dialogRef.close();
+
+    });
+
   }
 
   getTasksByStatus(status: string) {
