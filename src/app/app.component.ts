@@ -111,8 +111,8 @@ export class AppComponent implements OnInit {
 
   deleteTask(task: Task, status: string): void {
     const dialogRef = this.dialog.open(DeleteTaskModalComponent, {
-      height: '200px',
-      width: '300px'
+      height: '170px',
+      width: '350px'
     });
 
     dialogRef.componentInstance.confirmDelete.subscribe((confirmDelete: boolean) => {
