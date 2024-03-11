@@ -20,7 +20,7 @@ grid-gap: 10px;">
     }
     @if (!isLoading()) {
     <div style=" display: grid;
-    grid-template-columns: 5% 30% 30% 30% 5%; justify-items: stretch;" cdkDropListGroup>
+    grid-template-columns: 2.55% 31.3% 31.3% 31.3% 3.55%; justify-items: center;grid-gap: 10px;" cdkDropListGroup>
 
         <div style="grid-column-start: 2;">
             <div class="status-title" cdkDropList>NOT DONE</div>
@@ -30,9 +30,17 @@ grid-gap: 10px;">
                 <div class="task-card" cdkDrag>
                     <div class="task-card-title"> {{ task.name }} </div>
                     <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                    <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-                    <button class="task-button" role="button" (click)="deleteTask(task,'NOT_DONE')">Delete</button>
-                    <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                    <div style=" display: grid;
+                    grid-template-columns: 15% 17% 1fr 45%;
+                    grid-gap: 10px; margin-top: 25px;">
+                        <div> <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                        </div>
+                        <div> <button style="margin-left: 10px;" class="task-button" role="button"
+                                (click)="deleteTask(task,'NOT_DONE')">Delete</button> </div>
+                        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
+                            :"'Created' dd MMM yyyy" }} </div>
+                    </div>
+
                 </div>
                 }
             </div>
@@ -45,10 +53,20 @@ grid-gap: 10px;">
                 @for (task of tasksInProgress;track task.id) {
                 <div class="task-card" cdkDrag>
                     <div class="task-card-title"> {{ task.name }} </div>
-                    <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                    <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-                    <button class="task-button" role="button" (click)="deleteTask(task,'IN_PROGRESS')">Delete</button>
-                    <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                    <div style="margin-bottom: 10px;" class="task-card-body"> {{ task.description | slice:0:170}} </div>
+
+
+                    <div style=" display: grid;
+                    grid-template-columns: 15% 17% 1fr 45%;
+                    grid-gap: 10px; margin-top: 25px;">
+                        <div> <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                        </div>
+                        <div> <button style="margin-left: 10px;" class="task-button" role="button"
+                                (click)="deleteTask(task,'IN_PROGRESS')">Delete</button> </div>
+                        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
+                            :"'Created' dd MMM yyyy" }} </div>
+                    </div>
+
                 </div>
                 }
             </div>
@@ -61,9 +79,16 @@ grid-gap: 10px;">
                 <div class="task-card" cdkDrag>
                     <div class="task-card-title"> {{ task.name }} </div>
                     <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                    <div class="task-card-date"> {{ task.creationDate | date :"'Created' dd MMM yyyy" }} </div>
-                    <button class="task-button" role="button" (click)="deleteTask(task,'DONE')">Delete</button>
-                    <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                    <div style=" display: grid;
+                    grid-template-columns: 15% 17% 1fr 45%;
+                    grid-gap: 10px; margin-top: 25px;">
+                        <div> <button class="task-button" role="button" (click)="openEditTaskModal(task)">Edit</button>
+                        </div>
+                        <div> <button style="margin-left: 10px;" class="task-button" role="button"
+                                (click)="deleteTask(task,'DONE')">Delete</button> </div>
+                        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
+                            :"'Created' dd MMM yyyy" }} </div>
+                    </div>
                 </div>
                 }
             </div>
