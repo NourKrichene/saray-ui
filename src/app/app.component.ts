@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   DragDropModule,
   CdkDragDrop,
@@ -29,19 +29,21 @@ export class AppComponent implements OnInit {
   tasksToDo: Task[] = [];
   tasksInProgress: Task[] = [];
   tasksDone: Task[] = [];
-  addTaskForm!: FormGroup;
+  addTaskForm: FormGroup = this.formBuilder.group({
+    name: [''],
+    description: [''],
+    status: ['NOT_DONE']
+  });
   loading = signal(true);
-
-  constructor(private http: HttpClient, protected taskService: TaskService, private dialog: MatDialog) {
-  }
+  constructor(
+    private http: HttpClient,
+    protected taskService: TaskService,
+    private dialog: MatDialog,
+    private formBuilder: FormBuilder
+  ) { }
 
   ngOnInit() {
     this.getTasks();
-    this.addTaskForm = new FormGroup({
-      name: new FormControl(''),
-      description: new FormControl(''),
-      status: new FormControl('NOT_DONE')
-    });
   }
 
   isLoading() {
@@ -66,7 +68,7 @@ export class AppComponent implements OnInit {
 
   addTask(): void {
     const task: Task = this.addTaskForm.value;
-    task.creationDate = new Date();
+    task.setCreationDate(new Date());
     this.http.post<Task>('http://localhost:8081/tasks', task)
       .subscribe(task => {
         this.tasks.push(task);

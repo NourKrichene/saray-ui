@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AddTaskModalComponent {
   @Output() taskAdded = new EventEmitter<Task>();
-  task: Task = new Task();
+  task: Task = new Task('', '', '', 'NOT_DONE', new Date());
 
 
   submit(): void {

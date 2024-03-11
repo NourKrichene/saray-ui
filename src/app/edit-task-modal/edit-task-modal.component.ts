@@ -15,7 +15,7 @@ export class EditTaskModalComponent {
   editedTask: Task;
 
   constructor(@Inject(MAT_DIALOG_DATA) public task: Task) {
-    this.editedTask = { ...task }; // Copy task object to editedTask
+    this.editedTask = new Task(task.id, task.name, task.description, task.status, task.creationDate);
   }
 
   submit(): void {
