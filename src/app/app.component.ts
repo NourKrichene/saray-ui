@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core'; import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Task } from './Task';
 import { TaskService } from './task.service';
 import { HttpClient } from '@angular/common/http';
@@ -58,6 +59,13 @@ export class AppComponent implements OnInit {
         this.divideTasksByStatus();
       }
       );
+  }
+
+  filter(event: Event) {
+    let filterWord = (event.target as HTMLInputElement).value.toLowerCase();
+    this.tasksToDo = this.getTasksByStatus('NOT_DONE').filter(t => t.name.toLowerCase().includes(filterWord));
+    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS').filter(t => t.name.toLowerCase().includes(filterWord));
+    this.tasksDone = this.getTasksByStatus('DONE').filter(t => t.name.toLowerCase().includes(filterWord));
   }
 
   private divideTasksByStatus() {

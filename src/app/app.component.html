@@ -10,8 +10,8 @@ grid-gap: 10px;">
             <button type="submit" class="task-button" role="button" (click)="openAddTaskModal()">Add Task</button>
         </div>
         <div style=" justify-self: end;  margin-top: 2%; margin-right: 2%;">
-            <input type="text" id="search" placeholder=" search" style="border-radius: 6px;border-width: 1px;
-            background-color: #ebebeb;">
+            <input type="text" id="search" placeholder=" search" style="border-radius: 6px;border-width: 1px;min-height: 21px;
+            background-color: #ebebeb;" (keyup)="filter($event)">
         </div>
     </div>
 
