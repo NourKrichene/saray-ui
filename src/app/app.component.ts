@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
 import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
-import { DeleteTaskModalComponent } from './delete-task-modal/delete-task-modal.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   DragDropModule,
@@ -110,36 +109,24 @@ export class AppComponent implements OnInit {
   }
 
   deleteTask(task: Task, status: string): void {
-    const dialogRef = this.dialog.open(DeleteTaskModalComponent, {
-      height: '170px',
-      width: '350px'
-    });
+    this.http.delete<Task>('http://localhost:8081/tasks/' + task.id)
+      .subscribe(() => {
 
-    dialogRef.componentInstance.confirmDelete.subscribe((confirmDelete: boolean) => {
-      if (confirmDelete) {
-        this.http.delete<Task>('http://localhost:8081/tasks/' + task.id)
-          .subscribe(() => {
-
-            switch (status) {
-              case 'NOT_DONE':
-                this.tasksToDo = this.tasksToDo.filter(t => t.id !== task.id);
-                break;
-              case 'IN_PROGRESS':
-                this.tasksInProgress = this.tasksInProgress.filter(t => t.id !== task.id);
-                break;
-              case 'DONE':
-                this.tasksDone = this.tasksDone.filter(t => t.id !== task.id);
-                break;
-              default:
-                console.log(`Sorry, we are out of ${status}.`);
-            }
-
-            this.tasks = this.tasks.filter(t => t.id !== task.id);
-          });
-      }
-      dialogRef.close();
-
-    });
+        switch (status) {
+          case 'NOT_DONE':
+            this.tasksToDo = this.tasksToDo.filter(t => t.id !== task.id);
+            break;
+          case 'IN_PROGRESS':
+            this.tasksInProgress = this.tasksInProgress.filter(t => t.id !== task.id);
+            break;
+          case 'DONE':
+            this.tasksDone = this.tasksDone.filter(t => t.id !== task.id);
+            break;
+          default:
+            console.log(`Sorry, we are out of ${status}.`);
+        }
+        this.tasks = this.tasks.filter(t => t.id !== task.id);
+      });
 
   }
 
@@ -149,13 +136,19 @@ export class AppComponent implements OnInit {
 
   openEditTaskModal(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskModalComponent, {
-      height: '360px',
-      width: '400px',
+      height: '380px',
+      width: '420px',
       data: task
     });
 
     dialogRef.componentInstance.taskEdited.subscribe((editedTask: Task) => {
       this.editTask(editedTask);
+      dialogRef.close();
+    });
+
+    dialogRef.componentInstance.taskArchived.subscribe((editedTask: Task) => {
+      console.log('aa : ' + editedTask);
+      this.deleteTask(editedTask, editedTask.status);
       dialogRef.close();
     });
   }

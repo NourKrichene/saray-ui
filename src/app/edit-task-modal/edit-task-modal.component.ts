@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class EditTaskModalComponent {
   @Output() taskEdited = new EventEmitter<Task>();
+  @Output() taskArchived = new EventEmitter<Task>();
   editedTask: Task;
 
   constructor(@Inject(MAT_DIALOG_DATA) public task: Task) {
@@ -20,6 +21,10 @@ export class EditTaskModalComponent {
 
   submit(): void {
     this.taskEdited.emit(this.editedTask);
+  }
+
+  archive(): void {
+    this.taskArchived.emit(this.editedTask);
   }
 
 }
