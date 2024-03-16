@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
   addTask(): void {
     const task: Task = this.addTaskForm.value;
     task.setCreationDate(new Date());
-    this.http.post<Task>('http://localhost:8081/tasks', task)
+    this.http.post<Task>(`${this.taskService.backendUrl}tasks`, task)
       .subscribe(task => {
         this.tasks.push(task);
         this.addTaskForm.reset();
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
   }
 
   editTask(task: Task): void {
-    this.http.put<Task>('http://localhost:8081/tasks/' + task.id, task)
+    this.http.put<Task>(`${this.taskService.backendUrl}tasks/` + task.id, task)
       .subscribe((task) => {
 
         switch (task.status) {
@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
   }
 
   deleteTask(task: Task, status: string): void {
-    this.http.delete<Task>('http://localhost:8081/tasks/' + task.id)
+    this.http.delete<Task>(`${this.taskService.backendUrl}tasks/` + task.id)
       .subscribe(() => {
 
         switch (status) {
@@ -161,7 +161,7 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {
-      this.http.post<Task>('http://localhost:8081/tasks', task)
+      this.http.post<Task>(`${this.taskService.backendUrl}tasks`, task)
         .subscribe(task => {
           this.tasksToDo.unshift(task);
         });

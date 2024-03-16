@@ -8,12 +8,12 @@ import { Task } from './Task';
     providedIn: 'root',
 })
 export class TaskService {
-    private apiUrl = 'http://localhost:8081/';
+    public backendUrl = 'http://localhost:8081/';
 
     constructor(private http: HttpClient) { }
 
     public getTasks(): Observable<Task[]> {
-        return this.http.get<Task[]>(`${this.apiUrl}tasks`).pipe(
+        return this.http.get<Task[]>(`${this.backendUrl}tasks`).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
