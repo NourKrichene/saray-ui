@@ -8,12 +8,12 @@ import { Task } from './Task';
     providedIn: 'root',
 })
 export class TaskService {
-    public backendUrl = 'http://saray-backend:8081/';
+    public backendUrl = 'http://saray-backend:8081/tasks';
 
     constructor(private http: HttpClient) { }
 
     public getTasks(): Observable<Task[]> {
-        return this.http.get<Task[]>(`${this.backendUrl}tasks`).pipe(
+        return this.http.get<Task[]>('http://saray-backend:8081/tasks').pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
