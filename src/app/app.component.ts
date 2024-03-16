@@ -52,13 +52,11 @@ export class AppComponent implements OnInit {
   }
 
   getTasks(): void {
-    this.taskService.getTasks()
+    this.http.get<Task[]>('http://saray-backend:8081/tasks')
       .subscribe(tasks => {
-        this.loading.set(false);
         this.tasks = tasks;
         this.divideTasksByStatus();
-      }
-      );
+      });
   }
 
   filter(event: Event) {
