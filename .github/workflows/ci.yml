@@ -1,5 +1,4 @@
-name: Saray ui CI
-
+name: Build and push to Docker Hub
 on: workflow_dispatch
 
 jobs:
