@@ -23,7 +23,7 @@ export class TaskService {
                     // Server-side error
                     errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
                 }
-                console.error(errorMessage);
+                //console.error(errorMessage);
                 return throwError(() => error);
             })
         );
