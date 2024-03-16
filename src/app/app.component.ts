@@ -35,7 +35,6 @@ export class AppComponent implements OnInit {
     description: [''],
     status: ['NOT_DONE']
   });
-  loading = signal(true);
   constructor(
     private http: HttpClient,
     protected taskService: TaskService,
@@ -44,16 +43,16 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('init');
     this.getTasks();
   }
 
-  isLoading() {
-    return this.loading();
-  }
 
   getTasks(): void {
+    console.log('get tasks');
     this.http.get<Task[]>('http://saray-backend:8081/tasks')
       .subscribe(tasks => {
+        console.log('tasks : ' + tasks);
         this.tasks = tasks;
         this.divideTasksByStatus();
       });
