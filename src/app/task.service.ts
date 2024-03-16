@@ -8,7 +8,7 @@ import { Task } from './Task';
     providedIn: 'root',
 })
 export class TaskService {
-    public backendUrl = 'http://localhost:8081/';
+    public backendUrl = 'http://saray-backend:8081/';
 
     constructor(private http: HttpClient) { }
 
