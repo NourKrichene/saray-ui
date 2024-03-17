@@ -15,9 +15,13 @@ grid-gap: 10px;">
         </div>
     </div>
 
-
+    @if (isLoading()) {
+    <div class="loader"></div>
+    }
+    @if (!isLoading()) {
     <div style=" display: grid;
-    grid-template-columns: 2.55% 31.3% 31.3% 31.3% 3.55%; justify-items: center;grid-gap: 10px;" cdkDropListGroup>
+            grid-template-columns: 2.55% 31.3% 31.3% 31.3% 3.55%; justify-items: center;grid-gap: 10px;"
+        cdkDropListGroup>
 
         <div style="grid-column-start: 2;">
             <div class="status-title" cdkDropList>NOT DONE <span
@@ -29,8 +33,8 @@ grid-gap: 10px;">
                     <div class="task-card-title"> {{ task.name }} </div>
                     <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                     <div style=" display: grid;
-                    grid-template-columns: 15% 17% 1fr 45%;
-                    grid-gap: 10px; margin-top: 25px;">
+                            grid-template-columns: 15% 17% 1fr 45%;
+                            grid-gap: 10px; margin-top: 25px;">
                         <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
                             :"'Created' dd MMM yyyy" }} </div>
                     </div>
@@ -52,8 +56,8 @@ grid-gap: 10px;">
 
 
                     <div style=" display: grid;
-                    grid-template-columns: 15% 17% 1fr 45%;
-                    grid-gap: 10px; margin-top: 25px;">
+                            grid-template-columns: 15% 17% 1fr 45%;
+                            grid-gap: 10px; margin-top: 25px;">
 
 
                         <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
@@ -74,8 +78,8 @@ grid-gap: 10px;">
                     <div class="task-card-title"> {{ task.name }} </div>
                     <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
                     <div style=" display: grid;
-                    grid-template-columns: 15% 17% 1fr 45%;
-                    grid-gap: 10px; margin-top: 25px;">
+                            grid-template-columns: 15% 17% 1fr 45%;
+                            grid-gap: 10px; margin-top: 25px;">
 
 
                         <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
@@ -85,6 +89,5 @@ grid-gap: 10px;">
                 }
             </div>
         </div>
-
-    </div>
+    </div>}
 </div>

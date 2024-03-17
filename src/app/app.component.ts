@@ -1,11 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from './Task';
 import { TaskService } from './task.service';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
-import { EditTaskModalComponent, } from './edit-task-modal/edit-task-modal.component';
+import { EditTaskModalComponent } from './edit-task-modal/edit-task-modal.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   DragDropModule,
@@ -15,7 +14,6 @@ import {
   transferArrayItem
 } from '@angular/cdk/drag-drop';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,111 +22,44 @@ import {
   styleUrls: ['./app.component.css'],
   providers: [TaskService]
 })
-
 export class AppComponent implements OnInit {
   tasks: Task[] = [];
   tasksToDo: Task[] = [];
   tasksInProgress: Task[] = [];
   tasksDone: Task[] = [];
+  loading = true;
   addTaskForm: FormGroup = this.formBuilder.group({
     name: [''],
     description: [''],
     status: ['NOT_DONE']
   });
+
   constructor(
-    private http: HttpClient,
     protected taskService: TaskService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
-    console.log('init');
     this.getTasks();
   }
 
-
   getTasks(): void {
-    console.log('get tasks');
-    this.http.get<Task[]>('http://saray-backend:8081/tasks')
-      .subscribe(tasks => {
-        console.log('tasks : ' + tasks);
-        this.tasks = tasks;
-        this.divideTasksByStatus();
-      });
-  }
-
-  filter(event: Event) {
-    let filterWord = (event.target as HTMLInputElement).value.toLowerCase();
-    this.tasksToDo = this.getTasksByStatus('NOT_DONE').filter(t => t.name.toLowerCase().includes(filterWord));
-    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS').filter(t => t.name.toLowerCase().includes(filterWord));
-    this.tasksDone = this.getTasksByStatus('DONE').filter(t => t.name.toLowerCase().includes(filterWord));
-  }
-
-  private divideTasksByStatus() {
-    this.tasksToDo = this.getTasksByStatus('NOT_DONE');
-    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS');
-    this.tasksDone = this.getTasksByStatus('DONE');
-  }
-
-  addTask(): void {
-    const task: Task = this.addTaskForm.value;
-    task.setCreationDate(new Date());
-    this.http.post<Task>('http://saray-backend:8081/tasks', task)
-      .subscribe(task => {
-        this.tasks.push(task);
-        this.addTaskForm.reset();
-      });
+    this.taskService.getTasks().subscribe(tasks => {
+      this.loading = false;
+      this.tasks = tasks;
+      this.divideTasksByStatus();
+    });
   }
 
   editTask(task: Task): void {
-    this.http.put<Task>('http://saray-backend:8081/tasks' + task.id, task)
-      .subscribe((task) => {
-
-        switch (task.status) {
-          case 'NOT_DONE':
-            this.tasksToDo[this.tasksToDo.findIndex(t => t.id === task.id)] = task;
-            break;
-          case 'IN_PROGRESS':
-            this.tasksInProgress[this.tasksInProgress.findIndex(t => t.id === task.id)] = task;
-            break;
-          case 'DONE':
-            this.tasksDone[this.tasksDone.findIndex(t => t.id === task.id)] = task;
-            break;
-          default:
-            console.log(`Sorry, we are out of ${task.status}.`);
-        }
-
+    this.taskService.updateTask(task).subscribe(updatedTask => {
+      const taskList = this.getTaskListByStatus(updatedTask.status);
+      const index = taskList.findIndex(t => t.id === updatedTask.id);
+      if (index !== -1) {
+        taskList[index] = updatedTask;
       }
-
-      );
-
-  }
-
-  deleteTask(task: Task, status: string): void {
-    this.http.delete<Task>('http://saray-backend:8081/tasks' + task.id)
-      .subscribe(() => {
-
-        switch (status) {
-          case 'NOT_DONE':
-            this.tasksToDo = this.tasksToDo.filter(t => t.id !== task.id);
-            break;
-          case 'IN_PROGRESS':
-            this.tasksInProgress = this.tasksInProgress.filter(t => t.id !== task.id);
-            break;
-          case 'DONE':
-            this.tasksDone = this.tasksDone.filter(t => t.id !== task.id);
-            break;
-          default:
-            console.log(`Sorry, we are out of ${status}.`);
-        }
-        this.tasks = this.tasks.filter(t => t.id !== task.id);
-      });
-
-  }
-
-  getTasksByStatus(status: string) {
-    return this.tasks.filter(x => x.status == status);
+    });
   }
 
   openEditTaskModal(task: Task): void {
@@ -144,12 +75,10 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskArchived.subscribe((editedTask: Task) => {
-      console.log('aa : ' + editedTask);
       this.deleteTask(editedTask, editedTask.status);
       dialogRef.close();
     });
   }
-
 
   openAddTaskModal(): void {
     const dialogRef = this.dialog.open(AddTaskModalComponent, {
@@ -158,11 +87,18 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {
-      this.http.post<Task>('http://saray-backend:8081/tasks', task)
-        .subscribe(task => {
-          this.tasksToDo.unshift(task);
-        });
+      this.taskService.addTask(task).subscribe(addedTask => {
+        this.tasksToDo.unshift(addedTask);
+      });
       dialogRef.close();
+    });
+  }
+
+  deleteTask(task: Task, status: string): void {
+    this.taskService.deleteTask(task).subscribe(() => {
+      const taskList = this.getTaskListByStatus(status);
+      this.tasks = this.tasks.filter(t => t.id !== task.id);
+      taskList.splice(taskList.findIndex(t => t.id === task.id), 1);
     });
   }
 
@@ -174,10 +110,44 @@ export class AppComponent implements OnInit {
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
       event.container.data[event.currentIndex].status = status;
       this.editTask(event.container.data[event.currentIndex]);
+    }
+  }
+
+  filter(event: Event) {
+    const filterWord = (event.target as HTMLInputElement).value.toLowerCase();
+    this.tasksToDo = this.getTasksByStatus('NOT_DONE').filter(t => t.name.toLowerCase().includes(filterWord));
+    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS').filter(t => t.name.toLowerCase().includes(filterWord));
+    this.tasksDone = this.getTasksByStatus('DONE').filter(t => t.name.toLowerCase().includes(filterWord));
+  }
+
+  divideTasksByStatus() {
+    this.tasksToDo = this.getTasksByStatus('NOT_DONE');
+    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS');
+    this.tasksDone = this.getTasksByStatus('DONE');
+  }
+
+  getTasksByStatus(status: string) {
+    return this.tasks.filter(x => x.status === status);
+  }
+
+  isLoading() {
+    return this.loading;
+  }
+
+  getTaskListByStatus(status: string) {
+    switch (status) {
+      case 'NOT_DONE':
+        return this.tasksToDo;
+      case 'IN_PROGRESS':
+        return this.tasksInProgress;
+      case 'DONE':
+        return this.tasksDone;
+      default:
+        return [];
     }
   }
 }
