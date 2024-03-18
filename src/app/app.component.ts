@@ -13,7 +13,7 @@ import {
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
-import { TasksStore } from './task-store';
+import { TasksStore } from './task.store';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +24,6 @@ import { TasksStore } from './task-store';
   providers: [TaskService]
 })
 export class AppComponent implements OnInit {
-  tasks: Task[] = [];
   tasksToDo: Task[] = [];
   tasksInProgress: Task[] = [];
   tasksDone: Task[] = [];
@@ -46,22 +45,16 @@ export class AppComponent implements OnInit {
   }
 
   getTasks(): void {
-    this.tasksStore.getTasks().subscribe(tasks => {
-      this.tasks = tasks;
-      this.divideTasksByStatus();
+    this.tasksStore.getTasks().subscribe(({ toDo, inProgress, done }) => {
+      this.tasksToDo = toDo;
+      this.tasksInProgress = inProgress;
+      this.tasksDone = done;
       this.loading = false;
-      console.log(' 1 : ' + this.tasks.length);
     });
+
   }
 
-  editTask(task: Task): void {
-    this.tasksStore.updateTask(task);
-    const taskList = this.getTaskListByStatus(task.status);
-    const index = taskList.findIndex(t => t.id === task.id);
-    if (index !== -1) {
-      taskList[index] = task;
-    }
-  }
+
 
   openEditTaskModal(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskModalComponent, {
@@ -71,12 +64,12 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskEdited.subscribe((editedTask: Task) => {
-      this.editTask(editedTask);
+      this.tasksStore.updateTask(editedTask, editedTask.priority, editedTask.status);
       dialogRef.close();
     });
 
     dialogRef.componentInstance.taskArchived.subscribe((editedTask: Task) => {
-      this.deleteTask(editedTask, editedTask.status);
+      this.deleteTask(editedTask);
       dialogRef.close();
     });
   }
@@ -91,65 +84,43 @@ export class AppComponent implements OnInit {
       this.tasksStore.addTask(task);
       this.tasksToDo.unshift(task);
       dialogRef.close();
-      console.log(' 2 : ' + this.tasks.length);
     });
   }
 
 
-  deleteTask(task: Task, status: string): void {
+  deleteTask(task: Task): void {
     this.tasksStore.deleteTask(task);
-    const taskList = this.getTaskListByStatus(status);
-    this.tasks = this.tasks.filter(t => t.id !== task.id);
-    taskList.splice(taskList.findIndex(t => t.id === task.id), 1);
   }
 
-  drop(event: CdkDragDrop<Task[]>, status: string) {
+  drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       const task = event.container.data[event.currentIndex];
       task.priority = event.currentIndex;
-      this.editTask(event.container.data[event.currentIndex]);
+      this.tasksStore.updateTask(task, event.previousIndex, task.status);
     } else {
+      let previousStatus = event.previousContainer.data[event.previousIndex].status;
+      let newStatus = event.container.data[event.currentIndex].status;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      event.container.data[event.currentIndex].status = status;
       const task = event.container.data[event.currentIndex];
       task.priority = event.currentIndex;
-      this.editTask(event.container.data[event.currentIndex]);
+      task.status = newStatus;
+      this.tasksStore.updateTask(task, event.previousIndex, previousStatus);
     }
   }
 
   filter(event: Event) {
     const filterWord = (event.target as HTMLInputElement).value.toLowerCase();
-    this.tasksToDo = this.getTasksByStatus('NOT_DONE').filter(t => t.name.toLowerCase().includes(filterWord));
-    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS').filter(t => t.name.toLowerCase().includes(filterWord));
-    this.tasksDone = this.getTasksByStatus('DONE').filter(t => t.name.toLowerCase().includes(filterWord));
+    this.tasksToDo = this.tasksToDo.filter(x => x.status === 'NOT_DONE' && x.name.toLowerCase().includes(filterWord));
+    this.tasksInProgress = this.tasksInProgress.filter(x => x.status === 'IN_PROGRESS' && x.name.toLowerCase().includes(filterWord));
+    this.tasksDone = this.tasksDone.filter(x => x.status === 'DONE' && x.name.toLowerCase().includes(filterWord));
   }
 
-  divideTasksByStatus() {
-    this.tasksToDo = this.getTasksByStatus('NOT_DONE');
-    this.tasksInProgress = this.getTasksByStatus('IN_PROGRESS');
-    this.tasksDone = this.getTasksByStatus('DONE');
-  }
 
-  getTasksByStatus(status: string) {
-    return this.tasks.filter(x => x.status === status);
-  }
 
-  getTaskListByStatus(status: string) {
-    switch (status) {
-      case 'NOT_DONE':
-        return this.tasksToDo;
-      case 'IN_PROGRESS':
-        return this.tasksInProgress;
-      case 'DONE':
-        return this.tasksDone;
-      default:
-        return [];
-    }
-  }
 }
