@@ -5,7 +5,6 @@ import { TaskService } from './task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
 import { EditTaskModalComponent } from './edit-task-modal/edit-task-modal.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   DragDropModule,
   CdkDragDrop,
@@ -28,15 +27,9 @@ export class AppComponent implements OnInit {
   tasksInProgress: Task[] = [];
   tasksDone: Task[] = [];
   loading = true;
-  addTaskForm: FormGroup = this.formBuilder.group({
-    name: [''],
-    description: [''],
-    status: ['NOT_DONE']
-  });
 
   constructor(
     private dialog: MatDialog,
-    private formBuilder: FormBuilder,
     private tasksStore: TasksStore,
   ) { }
 
@@ -53,8 +46,6 @@ export class AppComponent implements OnInit {
     });
 
   }
-
-
 
   openEditTaskModal(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskModalComponent, {
@@ -120,7 +111,5 @@ export class AppComponent implements OnInit {
     this.tasksInProgress = this.tasksInProgress.filter(x => x.status === 'IN_PROGRESS' && x.name.toLowerCase().includes(filterWord));
     this.tasksDone = this.tasksDone.filter(x => x.status === 'DONE' && x.name.toLowerCase().includes(filterWord));
   }
-
-
 
 }

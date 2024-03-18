@@ -1,6 +1,6 @@
 import { createStore } from '@ngneat/elf';
 import { Task } from './Task';
-import { addEntities, deleteEntities, entitiesPropsFactory, selectAllEntities, setEntities, unionEntities, updateEntities } from '@ngneat/elf-entities';
+import { addEntities, deleteEntities, entitiesPropsFactory, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
 import { Injectable } from '@angular/core';
 import { TaskService } from './task.service';
 
