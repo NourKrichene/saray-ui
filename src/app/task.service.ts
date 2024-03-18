@@ -14,7 +14,7 @@ export class TaskService {
     constructor(private http: HttpClient) { }
 
     public getTasks(): Observable<Task[]> {
-        return this.http.get<Task[]>(`${this.apiUrl}tasks`).pipe(
+        return this.http.get<Task[]>(`${this.apiUrl}`).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
@@ -32,7 +32,7 @@ export class TaskService {
 
 
     public addTask(task: Task): Observable<Task> {
-        return this.http.post<Task>(`${this.apiUrl}tasks`, task).pipe(
+        return this.http.post<Task>(`${this.apiUrl}`, task).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
@@ -50,7 +50,7 @@ export class TaskService {
 
 
     public updateTask(task: Task): Observable<Task> {
-        return this.http.put<Task>(`${this.apiUrl}tasks/${task.id}`, task).pipe(
+        return this.http.put<Task>(`${this.apiUrl}/${task.id}`, task).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
@@ -67,7 +67,7 @@ export class TaskService {
     }
 
     public deleteTask(task: Task): Observable<Task> {
-        return this.http.delete<Task>(`${this.apiUrl}tasks/${task.id}`).pipe(
+        return this.http.delete<Task>(`${this.apiUrl}/${task.id}`).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
