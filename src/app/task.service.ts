@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Task } from './Task';
 import { environment } from '../environments/environment';
 
@@ -29,6 +29,7 @@ export class TaskService {
             })
         );
     }
+
 
 
     public addTask(task: Task): Observable<Task> {

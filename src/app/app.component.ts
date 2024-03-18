@@ -13,6 +13,7 @@ import {
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
+import { TasksStore } from './task-store';
 
 @Component({
   selector: 'app-root',
@@ -35,9 +36,9 @@ export class AppComponent implements OnInit {
   });
 
   constructor(
-    protected taskService: TaskService,
     private dialog: MatDialog,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private tasksStore: TasksStore,
   ) { }
 
   ngOnInit() {
@@ -45,21 +46,21 @@ export class AppComponent implements OnInit {
   }
 
   getTasks(): void {
-    this.taskService.getTasks().subscribe(tasks => {
-      this.loading = false;
+    this.tasksStore.getTasks().subscribe(tasks => {
       this.tasks = tasks;
       this.divideTasksByStatus();
+      this.loading = false;
+      console.log(' 1 : ' + this.tasks.length);
     });
   }
 
   editTask(task: Task): void {
-    this.taskService.updateTask(task).subscribe(updatedTask => {
-      const taskList = this.getTaskListByStatus(updatedTask.status);
-      const index = taskList.findIndex(t => t.id === updatedTask.id);
-      if (index !== -1) {
-        taskList[index] = updatedTask;
-      }
-    });
+    this.tasksStore.updateTask(task);
+    const taskList = this.getTaskListByStatus(task.status);
+    const index = taskList.findIndex(t => t.id === task.id);
+    if (index !== -1) {
+      taskList[index] = task;
+    }
   }
 
   openEditTaskModal(task: Task): void {
@@ -87,19 +88,19 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {
-      this.taskService.addTask(task).subscribe(addedTask => {
-        this.tasksToDo.unshift(addedTask);
-      });
+      this.tasksStore.addTask(task);
+      this.tasksToDo.unshift(task);
       dialogRef.close();
+      console.log(' 2 : ' + this.tasks.length);
     });
   }
 
+
   deleteTask(task: Task, status: string): void {
-    this.taskService.deleteTask(task).subscribe(() => {
-      const taskList = this.getTaskListByStatus(status);
-      this.tasks = this.tasks.filter(t => t.id !== task.id);
-      taskList.splice(taskList.findIndex(t => t.id === task.id), 1);
-    });
+    this.tasksStore.deleteTask(task);
+    const taskList = this.getTaskListByStatus(status);
+    this.tasks = this.tasks.filter(t => t.id !== task.id);
+    taskList.splice(taskList.findIndex(t => t.id === task.id), 1);
   }
 
   drop(event: CdkDragDrop<Task[]>, status: string) {
