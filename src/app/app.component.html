@@ -15,10 +15,10 @@ grid-gap: 10px;">
         </div>
     </div>
 
-    @if (isLoading()) {
+    @if (loading) {
     <div class="loader"></div>
     }
-    @if (!isLoading()) {
+    @if (!loading) {
     <div style=" display: grid;
             grid-template-columns: 2.55% 31.3% 31.3% 31.3% 3.55%; justify-items: center;grid-gap: 10px;"
         cdkDropListGroup>

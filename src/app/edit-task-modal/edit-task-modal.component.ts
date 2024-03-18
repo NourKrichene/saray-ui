@@ -16,10 +16,10 @@ export class EditTaskModalComponent {
   editedTask: Task;
 
   constructor(@Inject(MAT_DIALOG_DATA) public task: Task) {
-    this.editedTask = new Task(task.id, task.name, task.description, task.status, task.creationDate);
+    this.editedTask = new Task(task.id, task.name, task.description, task.status, task.creationDate, task.priority);
   }
 
-  submit(): void {
+  confirmEdit(): void {
     this.taskEdited.emit(this.editedTask);
   }
 

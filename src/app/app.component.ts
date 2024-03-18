@@ -105,6 +105,9 @@ export class AppComponent implements OnInit {
   drop(event: CdkDragDrop<Task[]>, status: string) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      const task = event.container.data[event.currentIndex];
+      task.priority = event.currentIndex;
+      this.editTask(event.container.data[event.currentIndex]);
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -113,6 +116,8 @@ export class AppComponent implements OnInit {
         event.currentIndex
       );
       event.container.data[event.currentIndex].status = status;
+      const task = event.container.data[event.currentIndex];
+      task.priority = event.currentIndex;
       this.editTask(event.container.data[event.currentIndex]);
     }
   }
@@ -132,10 +137,6 @@ export class AppComponent implements OnInit {
 
   getTasksByStatus(status: string) {
     return this.tasks.filter(x => x.status === status);
-  }
-
-  isLoading() {
-    return this.loading;
   }
 
   getTaskListByStatus(status: string) {
