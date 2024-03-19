@@ -1,9 +1,8 @@
 import { createStore } from '@ngneat/elf';
 import { Task } from './Task';
-import { addEntities, addEntitiesFifo, deleteEntities, entitiesPropsFactory, moveEntity, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
+import { EntitiesRef, addEntities, deleteEntities, entitiesPropsFactory, moveEntity, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
 import { Injectable } from '@angular/core';
 import { TaskService } from './task.service';
-
 
 const { toDoEntitiesRef, withToDoEntities } = entitiesPropsFactory('toDo');
 const { inProgressEntitiesRef, withInProgressEntities } = entitiesPropsFactory('inProgress');
@@ -36,8 +35,6 @@ export class TasksStore {
         });
     }
 
-
-
     public addTask(task: Task, previousIndex: number) {
         this.taskService.addTask(task).subscribe(taskAdded => {
             store.update(addEntities([taskAdded], { ref: toDoEntitiesRef }));
@@ -59,33 +56,16 @@ export class TasksStore {
 
     public updateTaskPriorityAndStatus(task: Task, previousStatus: string, newContainerLength: number) {
         this.taskService.updateTask(task).subscribe(taskUpdated => {
-            if (previousStatus == 'NOT_DONE')
-                store.update(deleteEntities([taskUpdated.id], { ref: toDoEntitiesRef }));
-            else if (previousStatus == 'IN_PROGRESS')
-                store.update(deleteEntities([taskUpdated.id], { ref: inProgressEntitiesRef }));
-            else if (previousStatus == 'DONE')
-                store.update(deleteEntities([taskUpdated.id], { ref: doneEntitiesRef }));
-
-            if (taskUpdated.status == 'NOT_DONE') {
-                store.update(addEntities([taskUpdated], { ref: toDoEntitiesRef }));
-                store.update(moveEntity({ fromIndex: newContainerLength, toIndex: taskUpdated.priority, ref: toDoEntitiesRef }));
-            }
-            else if (taskUpdated.status == 'IN_PROGRESS')
-                store.update(addEntities([taskUpdated], { ref: inProgressEntitiesRef }));
-            else if (taskUpdated.status == 'DONE')
-                store.update(addEntities([taskUpdated], { ref: doneEntitiesRef }));
-        });
-
+            store.update(deleteEntities([taskUpdated.id], { ref: this.getRefFromStatus(previousStatus) }));
+            store.update(addEntities([taskUpdated], { ref: this.getRefFromStatus(taskUpdated.status) }));
+            store.update(moveEntity({ fromIndex: newContainerLength, toIndex: taskUpdated.priority, ref: this.getRefFromStatus(taskUpdated.status) }));
+        }
+        );
     }
 
     public updateTask(task: Task) {
         this.taskService.updateTask(task).subscribe(taskUpdated => {
-            if (task.status === 'NOT_DONE')
-                store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: toDoEntitiesRef }));
-            else if (task.status === 'IN_PROGRESS')
-                store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: inProgressEntitiesRef }));
-            else if (task.status === 'DONE')
-                store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: doneEntitiesRef }));
+            store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: this.getRefFromStatus(task.status) }));
         });
     }
 
@@ -93,17 +73,24 @@ export class TasksStore {
 
     public deleteTask(task: Task) {
         this.taskService.deleteTask(task).subscribe(() => {
-            if (task.status === 'NOT_DONE')
-                store.update(deleteEntities([task.id], { ref: toDoEntitiesRef }));
-            else if (task.status === 'IN_PROGRESS')
-                store.update(deleteEntities([task.id], { ref: inProgressEntitiesRef }));
-            else if (task.status === 'DONE')
-                store.update(deleteEntities([task.id], { ref: doneEntitiesRef }));
+            store.update(deleteEntities([task.id], { ref: this.getRefFromStatus(task.status) }));
         });
     }
 
+    private getRefFromStatus(status: string): EntitiesRef {
+        switch (status) {
+            case 'NOT_DONE':
+                return toDoEntitiesRef;
+            case 'IN_PROGRESS':
+                return inProgressEntitiesRef;
+            case 'DONE':
+                return doneEntitiesRef;
+            default:
+                throw new Error(`Invalid status: ${status}`);
+        }
+    }
 
-    getTasksByStatus(tasks: Task[], status: string) {
+    private getTasksByStatus(tasks: Task[], status: string) {
         return tasks.filter(x => x.status === status);
     }
 }
