@@ -73,7 +73,6 @@ export class AppComponent implements OnInit {
 
     dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {
       this.tasksStore.addTask(task, this.tasksToDo.length);
-      this.tasksToDo.unshift(task);
       dialogRef.close();
     });
   }

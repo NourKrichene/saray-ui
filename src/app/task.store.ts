@@ -1,4 +1,4 @@
-import { createStore } from '@ngneat/elf';
+import { createStore, emitOnce } from '@ngneat/elf';
 import { Task } from './Task';
 import { EntitiesRef, addEntities, deleteEntities, entitiesPropsFactory, moveEntity, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
 import { Injectable } from '@angular/core';
@@ -37,44 +37,41 @@ export class TasksStore {
 
     public addTask(task: Task, previousIndex: number) {
         this.taskService.addTask(task).subscribe(taskAdded => {
-            store.update(addEntities([taskAdded], { ref: toDoEntitiesRef }));
-            store.update(moveEntity({ fromIndex: previousIndex + 1, toIndex: 0, ref: toDoEntitiesRef }));
+            emitOnce(() => {
+                store.update(addEntities([taskAdded], { ref: toDoEntitiesRef }));
+                store.update(moveEntity({ fromIndex: previousIndex, toIndex: 0, ref: toDoEntitiesRef }));
+            });
         }
         );
     }
-
 
 
     public updateTaskPriority(task: Task, previousPriority: number) {
+        if (previousPriority != task.priority) {
+            store.update(moveEntity({ fromIndex: previousPriority, toIndex: task.priority, ref: toDoEntitiesRef }));
+        }
         this.taskService.updateTask(task).subscribe(taskUpdated => {
-            if (previousPriority != taskUpdated.priority) {
-                store.update(moveEntity({ fromIndex: previousPriority, toIndex: taskUpdated.priority, ref: toDoEntitiesRef }));
-            }
         });
-
     }
 
     public updateTaskPriorityAndStatus(task: Task, previousStatus: string, newContainerLength: number) {
-        this.taskService.updateTask(task).subscribe(taskUpdated => {
-            store.update(deleteEntities([taskUpdated.id], { ref: this.getRefFromStatus(previousStatus) }));
-            store.update(addEntities([taskUpdated], { ref: this.getRefFromStatus(taskUpdated.status) }));
-            store.update(moveEntity({ fromIndex: newContainerLength, toIndex: taskUpdated.priority, ref: this.getRefFromStatus(taskUpdated.status) }));
-        }
-        );
+        emitOnce(() => {
+            store.update(deleteEntities([task.id], { ref: this.getRefFromStatus(previousStatus) }));
+            store.update(addEntities([task], { ref: this.getRefFromStatus(task.status) }));
+            store.update(moveEntity({ fromIndex: newContainerLength, toIndex: task.priority, ref: this.getRefFromStatus(task.status) }));
+
+        });
+        this.taskService.updateTask(task).subscribe();
     }
 
     public updateTask(task: Task) {
-        this.taskService.updateTask(task).subscribe(taskUpdated => {
-            store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: this.getRefFromStatus(task.status) }));
-        });
+        store.update(updateEntities(task.id, task, { ref: this.getRefFromStatus(task.status) }));
+        this.taskService.updateTask(task).subscribe();
     }
 
-
-
     public deleteTask(task: Task) {
-        this.taskService.deleteTask(task).subscribe(() => {
-            store.update(deleteEntities([task.id], { ref: this.getRefFromStatus(task.status) }));
-        });
+        store.update(deleteEntities([task.id], { ref: this.getRefFromStatus(task.status) }));
+        this.taskService.deleteTask(task).subscribe();
     }
 
     private getRefFromStatus(status: string): EntitiesRef {
