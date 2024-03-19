@@ -24,7 +24,6 @@ export class TasksStore {
                 setEntities(this.getTasksByStatus(tasks, 'IN_PROGRESS'), { ref: inProgressEntitiesRef }),
                 setEntities(this.getTasksByStatus(tasks, 'DONE'), { ref: doneEntitiesRef }));
         });
-
     }
 
     public getTasks() {
@@ -59,7 +58,6 @@ export class TasksStore {
             store.update(deleteEntities([task.id], { ref: this.getRefFromStatus(previousStatus) }));
             store.update(addEntities([task], { ref: this.getRefFromStatus(task.status) }));
             store.update(moveEntity({ fromIndex: newContainerLength, toIndex: task.priority, ref: this.getRefFromStatus(task.status) }));
-
         });
         this.taskService.updateTask(task).subscribe();
     }

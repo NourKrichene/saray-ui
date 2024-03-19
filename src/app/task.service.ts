@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Task } from './Task';
 import { environment } from '../environments/environment';
 
@@ -37,10 +37,8 @@ export class TaskService {
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
-                    // Client-side error
                     errorMessage = `Error: ${error.error.message}`;
                 } else {
-                    // Server-side error
                     errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
                 }
                 console.error(errorMessage);
@@ -55,10 +53,8 @@ export class TaskService {
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
-                    // Client-side error
                     errorMessage = `Error: ${error.error.message}`;
                 } else {
-                    // Server-side error
                     errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
                 }
                 console.error(errorMessage);
@@ -72,10 +68,8 @@ export class TaskService {
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
-                    // Client-side error
                     errorMessage = `Error: ${error.error.message}`;
                 } else {
-                    // Server-side error
                     errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
                 }
                 console.error(errorMessage);

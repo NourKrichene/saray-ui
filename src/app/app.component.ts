@@ -8,9 +8,7 @@ import { EditTaskModalComponent } from './edit-task-modal/edit-task-modal.compon
 import {
   DragDropModule,
   CdkDragDrop,
-  CdkDropList,
-  moveItemInArray,
-  transferArrayItem
+  CdkDropList
 } from '@angular/cdk/drag-drop';
 import { TasksStore } from './task.store';
 
@@ -60,7 +58,7 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskArchived.subscribe((editedTask: Task) => {
-      this.deleteTask(editedTask);
+      this.tasksStore.deleteTask(editedTask);
       dialogRef.close();
     });
   }
@@ -75,11 +73,6 @@ export class AppComponent implements OnInit {
       this.tasksStore.addTask(task, this.tasksToDo.length);
       dialogRef.close();
     });
-  }
-
-
-  deleteTask(task: Task): void {
-    this.tasksStore.deleteTask(task);
   }
 
   drop(event: CdkDragDrop<Task[]>, newStatus: string) {
