@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskAdded.subscribe((task: Task) => {
-      this.tasksStore.addTask(task);
+      this.tasksStore.addTask(task, this.tasksToDo.length);
       this.tasksToDo.unshift(task);
       dialogRef.close();
     });
@@ -91,9 +91,10 @@ export class AppComponent implements OnInit {
     } else {
       const task = event.previousContainer.data[event.previousIndex];
       const previousStatus = task.status;
+      const newContainerLength = event.container.data.length;
       task.status = newStatus;
       task.priority = event.currentIndex;
-      this.tasksStore.updateTaskPriorityAndStatus(task, previousStatus);
+      this.tasksStore.updateTaskPriorityAndStatus(task, previousStatus, newContainerLength);
     }
   }
 

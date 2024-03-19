@@ -1,6 +1,6 @@
 import { createStore } from '@ngneat/elf';
 import { Task } from './Task';
-import { addEntities, deleteEntities, entitiesPropsFactory, moveEntity, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
+import { addEntities, addEntitiesFifo, deleteEntities, entitiesPropsFactory, moveEntity, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
 import { Injectable } from '@angular/core';
 import { TaskService } from './task.service';
 
@@ -38,9 +38,10 @@ export class TasksStore {
 
 
 
-    public addTask(task: Task) {
+    public addTask(task: Task, previousIndex: number) {
         this.taskService.addTask(task).subscribe(taskAdded => {
             store.update(addEntities([taskAdded], { ref: toDoEntitiesRef }));
+            store.update(moveEntity({ fromIndex: previousIndex + 1, toIndex: 0, ref: toDoEntitiesRef }));
         }
         );
     }
@@ -56,7 +57,7 @@ export class TasksStore {
 
     }
 
-    public updateTaskPriorityAndStatus(task: Task, previousStatus: string) {
+    public updateTaskPriorityAndStatus(task: Task, previousStatus: string, newContainerLength: number) {
         this.taskService.updateTask(task).subscribe(taskUpdated => {
             if (previousStatus == 'NOT_DONE')
                 store.update(deleteEntities([taskUpdated.id], { ref: toDoEntitiesRef }));
@@ -65,8 +66,10 @@ export class TasksStore {
             else if (previousStatus == 'DONE')
                 store.update(deleteEntities([taskUpdated.id], { ref: doneEntitiesRef }));
 
-            if (taskUpdated.status == 'NOT_DONE')
+            if (taskUpdated.status == 'NOT_DONE') {
                 store.update(addEntities([taskUpdated], { ref: toDoEntitiesRef }));
+                store.update(moveEntity({ fromIndex: newContainerLength, toIndex: taskUpdated.priority, ref: toDoEntitiesRef }));
+            }
             else if (taskUpdated.status == 'IN_PROGRESS')
                 store.update(addEntities([taskUpdated], { ref: inProgressEntitiesRef }));
             else if (taskUpdated.status == 'DONE')
