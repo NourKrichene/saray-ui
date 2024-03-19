@@ -1,6 +1,6 @@
 import { createStore } from '@ngneat/elf';
 import { Task } from './Task';
-import { addEntities, deleteEntities, entitiesPropsFactory, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
+import { addEntities, deleteEntities, entitiesPropsFactory, moveEntity, selectAllEntities, setEntities, updateEntities } from '@ngneat/elf-entities';
 import { Injectable } from '@angular/core';
 import { TaskService } from './task.service';
 
@@ -45,42 +45,44 @@ export class TasksStore {
         );
     }
 
-    public updateTask(task: Task, previousPriority: number, previousStatus: string) {
+
+
+    public updateTaskPriority(task: Task, previousPriority: number) {
         this.taskService.updateTask(task).subscribe(taskUpdated => {
-            if (previousPriority != task.priority || previousStatus != task.status) {
-
-                if (previousStatus == taskUpdated.status) {
-                    if (taskUpdated.status === 'NOT_DONE')
-                        store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: toDoEntitiesRef }));
-                    else if (taskUpdated.status === 'IN_PROGRESS')
-                        store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: inProgressEntitiesRef }));
-                    else if (taskUpdated.status === 'DONE')
-                        store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: doneEntitiesRef }));
-                }
-                else {
-                    if (previousStatus === 'NOT_DONE')
-                        store.update(deleteEntities([taskUpdated.id], { ref: toDoEntitiesRef }));
-                    else if (previousStatus === 'IN_PROGRESS')
-                        store.update(deleteEntities([taskUpdated.id], { ref: inProgressEntitiesRef }));
-                    else if (previousStatus === 'DONE')
-                        store.update(deleteEntities([taskUpdated.id], { ref: doneEntitiesRef }));
-
-                    if (taskUpdated.status == 'NOT_DONE')
-                        store.update(addEntities([taskUpdated], { ref: toDoEntitiesRef }));
-                    else if (taskUpdated.status == 'IN_PROGRESS')
-                        store.update(addEntities([taskUpdated], { ref: inProgressEntitiesRef }));
-                    else if (taskUpdated.status == 'DONE')
-                        store.update(addEntities([taskUpdated], { ref: doneEntitiesRef }));
-                }
+            if (previousPriority != taskUpdated.priority) {
+                store.update(moveEntity({ fromIndex: previousPriority, toIndex: taskUpdated.priority, ref: toDoEntitiesRef }));
             }
-            else {
-                if (task.status === 'NOT_DONE')
-                    store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: toDoEntitiesRef }));
-                else if (task.status === 'IN_PROGRESS')
-                    store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: inProgressEntitiesRef }));
-                else if (task.status === 'DONE')
-                    store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: doneEntitiesRef }));
-            }
+        });
+
+    }
+
+    public updateTaskPriorityAndStatus(task: Task, previousStatus: string) {
+        this.taskService.updateTask(task).subscribe(taskUpdated => {
+            if (previousStatus == 'NOT_DONE')
+                store.update(deleteEntities([taskUpdated.id], { ref: toDoEntitiesRef }));
+            else if (previousStatus == 'IN_PROGRESS')
+                store.update(deleteEntities([taskUpdated.id], { ref: inProgressEntitiesRef }));
+            else if (previousStatus == 'DONE')
+                store.update(deleteEntities([taskUpdated.id], { ref: doneEntitiesRef }));
+
+            if (taskUpdated.status == 'NOT_DONE')
+                store.update(addEntities([taskUpdated], { ref: toDoEntitiesRef }));
+            else if (taskUpdated.status == 'IN_PROGRESS')
+                store.update(addEntities([taskUpdated], { ref: inProgressEntitiesRef }));
+            else if (taskUpdated.status == 'DONE')
+                store.update(addEntities([taskUpdated], { ref: doneEntitiesRef }));
+        });
+
+    }
+
+    public updateTask(task: Task) {
+        this.taskService.updateTask(task).subscribe(taskUpdated => {
+            if (task.status === 'NOT_DONE')
+                store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: toDoEntitiesRef }));
+            else if (task.status === 'IN_PROGRESS')
+                store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: inProgressEntitiesRef }));
+            else if (task.status === 'DONE')
+                store.update(updateEntities(taskUpdated.id, taskUpdated, { ref: doneEntitiesRef }));
         });
     }
 

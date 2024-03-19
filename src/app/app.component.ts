@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.taskEdited.subscribe((editedTask: Task) => {
-      this.tasksStore.updateTask(editedTask, editedTask.priority, editedTask.status);
+      this.tasksStore.updateTask(editedTask);
       dialogRef.close();
     });
 
@@ -83,25 +83,17 @@ export class AppComponent implements OnInit {
     this.tasksStore.deleteTask(task);
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
+  drop(event: CdkDragDrop<Task[]>, newStatus: string) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      const task = event.container.data[event.currentIndex];
+      const task = event.container.data[event.previousIndex];
       task.priority = event.currentIndex;
-      this.tasksStore.updateTask(task, event.previousIndex, task.status);
+      this.tasksStore.updateTaskPriority(task, event.previousIndex);
     } else {
-      let previousStatus = event.previousContainer.data[event.previousIndex].status;
-      let newStatus = event.container.data[event.currentIndex].status;
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      const task = event.container.data[event.currentIndex];
-      task.priority = event.currentIndex;
+      const task = event.previousContainer.data[event.previousIndex];
+      const previousStatus = task.status;
       task.status = newStatus;
-      this.tasksStore.updateTask(task, event.previousIndex, previousStatus);
+      task.priority = event.currentIndex;
+      this.tasksStore.updateTaskPriorityAndStatus(task, previousStatus);
     }
   }
 
