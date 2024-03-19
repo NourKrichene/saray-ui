@@ -22,48 +22,23 @@ grid-gap: 10px;">
     <div style=" display: grid;
             grid-template-columns: 2.55% 31.3% 31.3% 31.3% 3.55%; justify-items: center;grid-gap: 10px;"
         cdkDropListGroup>
-
         <div style="grid-column-start: 2;">
             <div class="status-title" cdkDropList>NOT DONE <span
                     style="font-size: 14px; color:  rgb(185, 185, 185);">{{tasksToDo.length}}</span></div>
             <div cdkDropList [cdkDropListData]="tasksToDo" (cdkDropListDropped)="drop($event, 'NOT_DONE')"
                 style="min-height: 60%;">
-                @for (task of tasksToDo ;track task.id) {
-                <div class="task-card" cdkDrag (click)="openEditTaskModal(task)">
-                    <div class="task-card-title"> {{ task.name }} </div>
-                    <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                    <div style=" display: grid;
-                            grid-template-columns: 15% 17% 1fr 45%;
-                            grid-gap: 10px; margin-top: 25px;">
-                        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
-                            :"'Created' dd MMM yyyy" }} </div>
-                    </div>
-                </div>
+                @for (task of tasksToDo ;track task.id) { <app-task-card cdkDrag [task]="task"
+                    (editTask)="openEditTaskModal($event)"></app-task-card>
                 }
             </div>
-
         </div>
         <div style="grid-column-start: 3;">
             <div class="status-title" cdkDropList>IN PROGRESS <span
                     style="font-size: 14px; color:  rgb(185, 185, 185);">{{tasksInProgress.length}}</span></div>
             <div cdkDropList (cdkDropListDropped)="drop($event,'IN_PROGRESS')" [cdkDropListData]="tasksInProgress"
                 style="min-height: 60%;">
-                @for (task of tasksInProgress;track task.id) {
-                <div class="task-card" cdkDrag (click)="openEditTaskModal(task)">
-                    <div class="task-card-title"> {{ task.name }} </div>
-                    <div style="margin-bottom: 10px;" class="task-card-body"> {{ task.description | slice:0:170}} </div>
-
-
-                    <div style=" display: grid;
-                            grid-template-columns: 15% 17% 1fr 45%;
-                            grid-gap: 10px; margin-top: 25px;">
-
-
-                        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
-                            :"'Created' dd MMM yyyy" }} </div>
-                    </div>
-
-                </div>
+                @for (task of tasksInProgress ;track task.id) { <app-task-card cdkDrag [task]="task"
+                    (editTask)="openEditTaskModal($event)"></app-task-card>
                 }
             </div>
         </div>
@@ -72,19 +47,8 @@ grid-gap: 10px;">
                     style="font-size: 14px; color: rgb(185, 185, 185);">{{tasksDone.length}}</span></div>
             <div cdkDropList [cdkDropListData]="tasksDone" (cdkDropListDropped)="drop($event,'DONE')"
                 style="min-height: 60%;">
-                @for (task of tasksDone ;track task.id) {
-                <div class="task-card" cdkDrag (click)="openEditTaskModal(task)">
-                    <div class="task-card-title"> {{ task.name }} </div>
-                    <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-                    <div style=" display: grid;
-                            grid-template-columns: 15% 17% 1fr 45%;
-                            grid-gap: 10px; margin-top: 25px;">
-
-
-                        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
-                            :"'Created' dd MMM yyyy" }} </div>
-                    </div>
-                </div>
+                @for (task of tasksDone ;track task.id) { <app-task-card cdkDrag [task]="task"
+                    (editTask)="openEditTaskModal($event)"></app-task-card>
                 }
             </div>
         </div>

@@ -5,6 +5,7 @@ import { TaskService } from './task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
 import { EditTaskModalComponent } from './edit-task-modal/edit-task-modal.component';
+import { TaskCardComponent } from './task-card/task-card.component';
 import {
   DragDropModule,
   CdkDragDrop,
@@ -15,7 +16,7 @@ import { TasksStore } from './task.store';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [DragDropModule, CdkDropList, CommonModule],
+  imports: [DragDropModule, CdkDropList, CommonModule, TaskCardComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: [TaskService]
@@ -42,7 +43,6 @@ export class AppComponent implements OnInit {
       this.tasksDone = done;
       this.loading = false;
     });
-
   }
 
   openEditTaskModal(task: Task): void {

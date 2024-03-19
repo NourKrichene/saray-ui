@@ -4,17 +4,6 @@
     Arial, sans-serif;
 }
 
-.task-card {
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
-    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
-  padding: 20px;
-  border-radius: 6px;
-  margin-block: 20px;
-  max-width: 320px;
-  color: #1a1313;
-  background-color: #fbfbfb;
-}
-
 .task-button {
   align-items: center;
   appearance: none;
@@ -57,25 +46,6 @@
 
 .task-button:focus:not(:active) {
   box-shadow: rgba(72, 95, 199, 0.25) 0 0 0 0.125em;
-}
-
-.task-card-title {
-  font-size: 1.1em;
-  font-weight: 500;
-  margin-bottom: 0.8em;
-  color: #1a1313;
-}
-
-.task-card-body {
-  font-size: 0.9em;
-}
-
-.task-card-date {
-  color: #999;
-  margin-top: 0;
-  text-align: right;
-  font-size: 0.9em;
-  padding-block: 0.8em;
 }
 
 .status-title {
