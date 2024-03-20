@@ -4,50 +4,23 @@
     Arial, sans-serif;
 }
 
-.task-button {
-  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border: 1px solid #dbdbdb;
+.task-container {
+  display: grid;
+  grid-template-rows: 4% auto;
+  grid-gap: 10px;
+}
+.filter-tab {
   border-radius: 0.375em;
-  box-shadow: none;
-  box-sizing: border-box;
-  color: #363636;
-  cursor: pointer;
-  display: inline-flex;
-  font-size: 1rem;
-  height: 2.5em;
-  justify-content: center;
-  line-height: 1.5;
-  padding: calc(0.5em - 1px) 1em;
-  position: relative;
-  text-align: center;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: top;
-  white-space: nowrap;
-  margin-top: 3%;
+  border-width: 1px;
+  min-height: 21px;
+  background-color: #ebebeb;
 }
-
-.task-button:active {
-  border-color: #4a4a4a;
-  outline: 0;
+.app-title {
+  font-weight: bold;
+  font-size: large;
+  margin-left: 1%;
+  color: #1a1313;
 }
-
-.task-button:focus {
-  border-color: #485fc7;
-  outline: 0;
-}
-
-.task-button:hover {
-  border-color: #b5b5b5;
-}
-
-.task-button:focus:not(:active) {
-  box-shadow: rgba(72, 95, 199, 0.25) 0 0 0 0.125em;
-}
-
 .status-title {
   font-size: 1.2em;
   font-weight: 500;
@@ -74,6 +47,12 @@
   }
 }
 
+.task-board {
+  display: grid;
+  grid-template-columns: 2.55% 31.3% 31.3% 31.3% 3.55%;
+  justify-items: center;
+  grid-gap: 10px;
+}
 .task-button-add {
   align-items: center;
   appearance: none;

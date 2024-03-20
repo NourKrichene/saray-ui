@@ -1,10 +1,8 @@
 <div class="task-card" (click)="openEditTaskModal(task)">
     <div class="task-card-title"> {{ task.name }} </div>
     <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
-    <div style=" display: grid;
-                    grid-template-columns: 15% 17% 1fr 45%;
-                    grid-gap: 10px; margin-top: 25px;">
-        <div style="grid-column: 4/-1;" class="task-card-date"> {{ task.creationDate | date
+    <div class="task-card-content">
+        <div class="task-card-date"> {{ task.creationDate | date
             :"'Created' dd MMM yyyy" }} </div>
     </div>
 </div>
