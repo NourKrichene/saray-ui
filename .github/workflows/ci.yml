@@ -14,11 +14,19 @@ jobs:
         with:
           node-version: "20.11.1"
 
+      - name: cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install dependencies
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          npm run lint
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3

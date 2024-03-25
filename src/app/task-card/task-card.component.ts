@@ -10,12 +10,15 @@ import { Task } from '../Task';
   styleUrl: './task-card.component.css'
 })
 export class TaskCardComponent {
-  @Input() task: any;
+  @Input() task: Task;
   @Output() editTask = new EventEmitter<Task>();
 
   constructor() { }
-
   openEditTaskModal(task: Task): void {
     this.editTask.emit(task);
+  }
+
+  notOpenEditTaskModal() {
+
   }
 }

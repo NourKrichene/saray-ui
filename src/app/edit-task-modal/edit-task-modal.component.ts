@@ -4,7 +4,6 @@ import { Task } from '../Task';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'edit-task-modal',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './edit-task-modal.component.html',

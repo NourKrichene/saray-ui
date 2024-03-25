@@ -1,5 +1,6 @@
-<div class="task-card" (click)="openEditTaskModal(task)">
-    <div class="task-card-title"> {{ task.name }} </div>
+<div class="task-card" (click)="openEditTaskModal(task)" tabindex="0" (keyup)="notOpenEditTaskModal()"
+    (keydown)="notOpenEditTaskModal()" (keypress)="openEditTaskModal(task)">
+    <div class=" task-card-title"> {{ task.name }} </div>
     <div class="task-card-body"> {{ task.description | slice:0:170}} </div>
     <div class="task-card-content">
         <div class="task-card-date"> {{ task.creationDate | date

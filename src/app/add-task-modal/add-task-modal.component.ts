@@ -3,7 +3,6 @@ import { Task } from '../Task';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'add-task-modal',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './add-task-modal.component.html',

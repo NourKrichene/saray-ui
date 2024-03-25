@@ -49,8 +49,7 @@ export class TasksStore {
         if (previousPriority != task.priority) {
             store.update(moveEntity({ fromIndex: previousPriority, toIndex: task.priority, ref: toDoEntitiesRef }));
         }
-        this.taskService.updateTask(task).subscribe(taskUpdated => {
-        });
+        this.taskService.updateTask(task).subscribe();
     }
 
     public updateTaskPriorityAndStatus(task: Task, previousStatus: string, newContainerLength: number) {
