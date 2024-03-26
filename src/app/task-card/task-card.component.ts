@@ -18,7 +18,5 @@ export class TaskCardComponent {
     this.editTask.emit(task);
   }
 
-  notOpenEditTaskModal() {
-
-  }
+  notOpenEditTaskModal() { }
 }
