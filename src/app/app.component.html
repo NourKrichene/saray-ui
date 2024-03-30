@@ -10,10 +10,21 @@
             <input type="text" id="search" placeholder=" search" class="filter-tab" (keyup)="filter($event)">
         </div>
     </div>
+
+    @if(loggedIn) {
+    <div>
+        <button (click)="logout()">logout</button>
+    </div>
+    } @else {
+    <div>
+        <button (click)="login()">login</button>
+    </div>
+    }
+
+
     @if (loading) {
     <div class="loader"></div>
-    }
-    @if (!loading) {
+    } @else {
     <div class=" task-board" cdkDropListGroup>
         <div style="grid-column-start: 2;">
             <div class="status-title" cdkDropList>NOT DONE <span

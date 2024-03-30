@@ -12,6 +12,7 @@ import {
   CdkDropList
 } from '@angular/cdk/drag-drop';
 import { TasksStore } from './task.store';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-root',
@@ -26,14 +27,17 @@ export class AppComponent implements OnInit {
   tasksInProgress: Task[] = [];
   tasksDone: Task[] = [];
   loading = true;
+  loggedIn = false;
 
   constructor(
     private dialog: MatDialog,
     private tasksStore: TasksStore,
+    private keycloakService: KeycloakService
   ) { }
 
   ngOnInit() {
     this.getTasks();
+    this.loggedIn = this.keycloakService.isLoggedIn();
   }
 
   getTasks(): void {
@@ -95,6 +99,19 @@ export class AppComponent implements OnInit {
     this.tasksToDo = this.tasksToDo.filter(x => x.status === 'NOT_DONE' && x.name.toLowerCase().includes(filterWord));
     this.tasksInProgress = this.tasksInProgress.filter(x => x.status === 'IN_PROGRESS' && x.name.toLowerCase().includes(filterWord));
     this.tasksDone = this.tasksDone.filter(x => x.status === 'DONE' && x.name.toLowerCase().includes(filterWord));
+  }
+
+  login() {
+    this.keycloakService.login().then(() => {
+      this.loggedIn = true;
+    });
+  }
+
+  logout() {
+    this.keycloakService.logout().then(() => {
+      this.loggedIn = false;
+    }
+    );
   }
 
 }

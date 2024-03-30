@@ -1,9 +1,10 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Task } from './Task';
 import { environment } from '../environments/environment';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,7 @@ import { environment } from '../environments/environment';
 export class TaskService {
     private apiUrl = environment.apiUrl;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private readonly keycloakService: KeycloakService) { }
 
     public getTasks(): Observable<Task[]> {
         return this.http.get<Task[]>(`${this.apiUrl}`).pipe(
@@ -30,10 +31,9 @@ export class TaskService {
         );
     }
 
-
-
     public addTask(task: Task): Observable<Task> {
-        return this.http.post<Task>(`${this.apiUrl}`, task).pipe(
+        const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.keycloakService.getKeycloakInstance().token}` })
+        return this.http.post<Task>(`${this.apiUrl}`, task, { headers }).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
@@ -49,7 +49,8 @@ export class TaskService {
 
 
     public updateTask(task: Task): Observable<Task> {
-        return this.http.put<Task>(`${this.apiUrl}/${task.id}`, task).pipe(
+        const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.keycloakService.getKeycloakInstance().token}` })
+        return this.http.put<Task>(`${this.apiUrl}/${task.id}`, task, { headers }).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
@@ -64,7 +65,8 @@ export class TaskService {
     }
 
     public deleteTask(task: Task): Observable<Task> {
-        return this.http.delete<Task>(`${this.apiUrl}/${task.id}`).pipe(
+        const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.keycloakService.getKeycloakInstance().token}` })
+        return this.http.delete<Task>(`${this.apiUrl}/${task.id}`, { headers }).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
