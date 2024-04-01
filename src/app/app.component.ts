@@ -104,12 +104,20 @@ export class AppComponent implements OnInit {
   login() {
     this.keycloakService.login().then(() => {
       this.loggedIn = true;
-    });
+    }
+    );
   }
-
   logout() {
     this.keycloakService.logout().then(() => {
       this.loggedIn = false;
+    }
+    );
+  }
+
+  saveClient() {
+    this.keycloakService.loadUserProfile().then((profile) => {
+      console.log("id : " + profile.id);
+      console.log("email : " + profile.email);
     }
     );
   }

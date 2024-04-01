@@ -15,7 +15,8 @@ export class TaskService {
     constructor(private http: HttpClient, private readonly keycloakService: KeycloakService) { }
 
     public getTasks(): Observable<Task[]> {
-        return this.http.get<Task[]>(`${this.apiUrl}`).pipe(
+        const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.keycloakService.getKeycloakInstance().token}` })
+        return this.http.get<Task[]>(`${this.apiUrl}`, { headers }).pipe(
             catchError((error: HttpErrorResponse) => {
                 let errorMessage;
                 if (error.error instanceof ErrorEvent) {
