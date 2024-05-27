@@ -8,7 +8,6 @@ import {
   CdkDragDrop,
   CdkDropList
 } from '@angular/cdk/drag-drop';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { KeycloakService } from 'keycloak-angular';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { TaskLineComponent } from '../task-line/task-line.component';
@@ -40,21 +39,12 @@ export class DashboardComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private tasksStore: TasksStore,
-    private keycloakService: KeycloakService,
-    private breakpointObserver: BreakpointObserver
-  ) {
-
-
-  }
+    private keycloakService: KeycloakService
+  ) { }
 
   ngOnInit() {
     this.getTasks();
     this.loggedIn = this.keycloakService.isLoggedIn();
-    this.breakpointObserver.observe(['(max-width: 840px)'])
-      .subscribe(result => {
-        console.log("aa " + result)
-        this.forcedList = !this.forcedList;
-      });
   }
 
 
