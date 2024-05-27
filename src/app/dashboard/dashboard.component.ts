@@ -34,7 +34,6 @@ export class DashboardComponent implements OnInit {
   loading = true;
   loggedIn = false;
   listDisplay = false;
-  forcedList = false;
 
   constructor(
     private dialog: MatDialog,
