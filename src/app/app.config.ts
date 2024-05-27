@@ -17,7 +17,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         clientId: 'saray-ui'
       },
       initOptions: {
-        redirectUri: 'http://localhost:4200/'
+        redirectUri: 'http://localhost:4200/dashboard'
       }
     });
 }

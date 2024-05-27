@@ -1,0 +1,12 @@
+<div class="task-line" (click)="openEditTaskModal(task)" tabindex="0" (keyup)="notOpenEditTaskModal()"
+    (keydown)="notOpenEditTaskModal()" (keypress)="openEditTaskModal(task)">
+    <div class=" task-line-title"> {{ task.name }}
+
+        <span class="task-line-date"> {{ task.creationDate | date
+            :"'Created' dd MMM yyyy" }} </span>
+
+    </div>
+    <div class="task-line-body"> {{ task.description | slice:0:170}}
+
+    </div>
+</div>

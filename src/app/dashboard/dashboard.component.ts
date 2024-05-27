@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
 import {
@@ -7,19 +8,22 @@ import {
   CdkDragDrop,
   CdkDropList
 } from '@angular/cdk/drag-drop';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { KeycloakService } from 'keycloak-angular';
 import { TaskCardComponent } from '../task-card/task-card.component';
+import { TaskLineComponent } from '../task-line/task-line.component';
 import { TaskService } from '../task.service';
 import { Task } from '../Task';
 import { AddTaskModalComponent } from '../add-task-modal/add-task-modal.component';
 import { EditTaskModalComponent } from '../edit-task-modal/edit-task-modal.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TasksStore } from '../task.store';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DragDropModule, CdkDropList, CommonModule, TaskCardComponent, RouterLink],
+  imports: [DragDropModule, CdkDropList, CommonModule, TaskCardComponent, TaskLineComponent, MatSlideToggleModule, RouterLink, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   providers: [TaskService]
@@ -30,17 +34,29 @@ export class DashboardComponent implements OnInit {
   tasksDone: Task[] = [];
   loading = true;
   loggedIn = false;
+  listDisplay = false;
+  forcedList = false;
 
   constructor(
     private dialog: MatDialog,
     private tasksStore: TasksStore,
-    private keycloakService: KeycloakService
-  ) { }
+    private keycloakService: KeycloakService,
+    private breakpointObserver: BreakpointObserver
+  ) {
+
+
+  }
 
   ngOnInit() {
     this.getTasks();
     this.loggedIn = this.keycloakService.isLoggedIn();
+    this.breakpointObserver.observe(['(max-width: 840px)'])
+      .subscribe(result => {
+        console.log("aa " + result)
+        this.forcedList = !this.forcedList;
+      });
   }
+
 
   getTasks(): void {
     this.tasksStore.getTasks().subscribe(({ toDo, inProgress, done }) => {
